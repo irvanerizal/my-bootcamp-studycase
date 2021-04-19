@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="atm-studycase:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/atm_studycase_jar</output-path>
+    <root id="archive" name="atm-studycase.jar">
+      <element id="module-output" name="atm-studycase" />
+    </root>
+  </artifact>
+</component>
