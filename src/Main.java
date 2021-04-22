@@ -164,16 +164,16 @@ public class Main {
     private static Integer launchFundTransferScreen(Account userAccount) {
         String destinationAccInput = "init";
         String transferAmountInput = "init";
-        String confirmInput = "init";
         String summaryInput = "0";
 
         boolean isDestinationAccValid = false;
         boolean isTransferAmountValid = false;
-
         int refNumber;
 
         while (!destinationAccInput.isEmpty() && !transferAmountInput.isEmpty()
                 && summaryInput.equals("0")){
+
+            String confirmInput = "init";
 
             Scanner scanner = new Scanner(System.in);
             System.out.println("Please enter destination account and press enter to continue or \n" +
@@ -186,7 +186,7 @@ public class Main {
             scanner.reset();
 
             while (isDestinationAccValid && !transferAmountInput.isEmpty()
-                    && (!confirmInput.isEmpty() || confirmInput.equals("2"))
+                    && (!confirmInput.isEmpty() && !confirmInput.equals("2"))
                     && summaryInput.equals("0")){
 
                 System.out.println("Please enter transfer amount and \n" +
@@ -200,7 +200,7 @@ public class Main {
                 scanner.reset();
 
                 while (isTransferAmountValid
-                        && (!confirmInput.isEmpty() || confirmInput.equals("2"))
+                        && (!confirmInput.isEmpty() && !confirmInput.equals("2"))
                         && summaryInput.equals("0")){
 
                     refNumber = generateRefNumber();
@@ -227,6 +227,10 @@ public class Main {
                             break;
                         case "2":
                         case "":
+                            destinationAccInput = "init";
+                            transferAmountInput = "init";
+                            isDestinationAccValid = false;
+                            isTransferAmountValid = false;
                             break;
                     }
                 }
@@ -350,8 +354,12 @@ public class Main {
         return 100000 + new Random().nextInt(900000);
     }
 
-//    private static void debuggingOnly(Account userAccount){
+    // TODO: Using for debugging only
+    private static void debuggingOnly(){
 //        System.out.println("*DEBUGGING : User Latest Balance : " + userAccount.getBalance());
-//    }
+        accounts.forEach(account -> {
+            System.out.println(account.getName() + " - " + account.getBalance());
+        });
+    }
 
 }
