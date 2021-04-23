@@ -9,8 +9,8 @@ public class Main {
 
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private static final List<Account> ACCOUNTS = Arrays.asList(
-            new Account(112233, "012108", "John Doe", 100l),
-            new Account(112244, "932012", "Jane Doe", 30l)
+            new Account("112233", "012108", "John Doe", 100l),
+            new Account("112244", "932012", "Jane Doe", 30l)
     );
 
     public static void main(String[] args) {
@@ -34,7 +34,7 @@ public class Main {
             boolean pinNumberValidation = isNumber(pin);
 
             Account userAccount = ACCOUNTS.stream()
-                    .filter(account -> account.getAccountNumber().toString().equals(accountNo)
+                    .filter(account -> account.getAccountNumber().equals(accountNo)
                             && account.getPin().equals(pin))
                     .findAny().orElse(null);
 
@@ -341,7 +341,7 @@ public class Main {
     /*Utils Methods*/
     private static Account findAccount(String accountNumber){
         return ACCOUNTS.stream()
-                .filter(account -> account.getAccountNumber().toString().equals(accountNumber))
+                .filter(account -> account.getAccountNumber().equals(accountNumber))
                 .findAny().orElse(null);
     }
 

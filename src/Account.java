@@ -1,22 +1,22 @@
 public class Account {
 
-    private Integer accountNumber;
+    private String accountNumber;
     private String pin;
     private String name;
     private Long balance;
 
-    public Account(Integer accountNumber, String pin, String name, Long balance) {
+    public Account(String accountNumber, String pin, String name, Long balance) {
         this.accountNumber = accountNumber;
         this.pin = pin;
         this.name = name;
         this.balance = balance;
     }
 
-    public Integer getAccountNumber() {
+    public String getAccountNumber() {
         return accountNumber;
     }
 
-    public void setAccountNumber(Integer accountNumber) {
+    public void setAccountNumber(String accountNumber) {
         this.accountNumber = accountNumber;
     }
 
