@@ -7,12 +7,11 @@ import java.util.Scanner;
 
 public class Main {
 
-    private static final List<Account> accounts = Arrays.asList(
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private static final List<Account> ACCOUNTS = Arrays.asList(
             new Account(112233, "012108", "John Doe", 100l),
             new Account(112244, "932012", "Jane Doe", 30l)
     );
-
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public static void main(String[] args) {
         while (true) {
@@ -34,7 +33,7 @@ public class Main {
             boolean pinLengthValidation = pin.length() == 6;
             boolean pinNumberValidation = isNumber(pin);
 
-            Account userAccount = accounts.stream()
+            Account userAccount = ACCOUNTS.stream()
                     .filter(account -> account.getAccountNumber().toString().equals(accountNo)
                             && account.getPin().equals(pin))
                     .findAny().orElse(null);
@@ -341,7 +340,7 @@ public class Main {
 
     /*Utils Methods*/
     private static Account findAccount(String accountNumber){
-        return accounts.stream()
+        return ACCOUNTS.stream()
                 .filter(account -> account.getAccountNumber().toString().equals(accountNumber))
                 .findAny().orElse(null);
     }
@@ -354,12 +353,10 @@ public class Main {
         return 100000 + new Random().nextInt(900000);
     }
 
-    // TODO: Using for debugging only
+    // TODO: Use for debugging only
     private static void debuggingOnly(){
 //        System.out.println("*DEBUGGING : User Latest Balance : " + userAccount.getBalance());
-        accounts.forEach(account -> {
-            System.out.println(account.getName() + " - " + account.getBalance());
-        });
+        ACCOUNTS.forEach(account -> System.out.println(account.getName() + " - " + account.getBalance()));
     }
 
 }
