@@ -2,11 +2,9 @@ package service;
 
 import entity.Account;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+
 import java.util.Arrays;
 import java.util.List;
-import java.util.Scanner;
 
 public class AccountService {
 
@@ -42,7 +40,5 @@ public class AccountService {
         return (userAccount.getBalance() >= withdrawAmount
                 && userAccount.getBalance() - withdrawAmount >= 0);
     }
-
-
 
 }

@@ -12,8 +12,8 @@ public class TransactionScreen {
     private static final String TRANSFER_MENU = "2";
     private static final String EXIT_MENU = "3";
 
-    private WithdrawScreen withdrawScreen = new WithdrawScreen();
-    private TransferScreen transferScreen = new TransferScreen();
+    private final WithdrawScreen withdrawScreen = new WithdrawScreen();
+    private final TransferScreen transferScreen = new TransferScreen();
 
     public void launchTransactionScreen(Account userAccount){
         String transactionScreenInput = "";

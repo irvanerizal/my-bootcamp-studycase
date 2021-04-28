@@ -31,6 +31,7 @@ public class WithdrawService {
         System.out.println("Choose option[2]");
         String input = scanner.nextLine();
 
-        return input.isEmpty() ? Utilities.SUMMARY_BACK_TRANSACTION_MENU : Integer.parseInt(input);
+        return input.isEmpty() ? Utilities.SUMMARY_BACK_TRANSACTION_MENU :
+                !Utilities.isNumber(input) ? Utilities.SUMMARY_BACK_TRANSACTION_MENU : Integer.parseInt(input);
     }
 }

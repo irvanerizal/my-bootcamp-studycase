@@ -37,8 +37,9 @@ public class WithdrawCustomScreen {
             if (!isMaxValid || !isMultipleByTenValid) {
                 if(!isMaxValid){
                     System.out.println("Maximum amount to withdraw is $1000");
-                }
-                System.out.println("Invalid amount");
+                } else {
+                    System.out.println("Invalid amount");
+               }
                 continue;
             }
             withdrawValid = accountService.validateWithdrawTransaction(userAccount, customWithdrawAmount);
