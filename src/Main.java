@@ -1,67 +1,65 @@
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
-import java.util.Scanner;
+import view.WelcomeScreen;
 
 public class Main {
 
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-    private static final List<Account> ACCOUNTS = Arrays.asList(
-            new Account("112233", "012108", "John Doe", 100l),
-            new Account("112244", "932012", "Jane Doe", 30l)
-    );
+//    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+//    private static AccountService accountService = new AccountService();
+
+    private static WelcomeScreen welcomeScreen = new WelcomeScreen();
 
     public static void main(String[] args) {
         while (true) {
-            // do something
-            launchWelcomeScreen();
+            // do something)
+            welcomeScreen.launchWelcomeScreen();
         }
     }
 
-    private static void launchWelcomeScreen() {
+    /*private static void launchWelcomeScreen() {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter Account Number : ");
+        System.out.println("Enter entity.Account Number : ");
         String accountNo = scanner.next();
-        boolean accLengthValidation = accountNo.length() == 6;
+        boolean accLengthValidation = isAccLengthValidation(accountNo.length(), 6); // TODO: 26/04/2021 put as constant
         boolean accNumberValidation = isNumber(accountNo);
 
-        if (accLengthValidation && accNumberValidation) {
-            System.out.println("Enter PIN : " + scanner.nextLine());
-            String pin = scanner.next();
-            boolean pinLengthValidation = pin.length() == 6;
-            boolean pinNumberValidation = isNumber(pin);
-
-            Account userAccount = ACCOUNTS.stream()
-                    .filter(account -> account.getAccountNumber().equals(accountNo)
-                            && account.getPin().equals(pin))
-                    .findAny().orElse(null);
-
-            if (pinLengthValidation && pinNumberValidation) {
-                if (userAccount == null) {
-                    System.out.println("Invalid Account Number/PIN");
-                } else {
-                    System.out.println("Welcome " + userAccount.getName());
-                    launchTransactionScreen(userAccount);
-                }
+        if (!isAccLengthValidation(accountNo.length(), 6) || !isNumber(accountNo)) {
+            if (!accLengthValidation) {
+                System.out.println("entity.Account Number should have 6 digits length");
             } else {
-                if (!pinLengthValidation) {
-                    System.out.println("PIN should have 6 digits length");
-                } else {
-                    System.out.println("PIN should only contains number");
-                }
+                System.out.println("entity.Account Number should only contains number");
+            }
+            return ;
+        }
+        System.out.println("Enter PIN : " + scanner.nextLine());
+        String pin = scanner.next();
+        boolean pinLengthValidation = isAccLengthValidation(pin.length(), 6);
+        boolean pinNumberValidation = isNumber(pin);
+
+        Account userAccount = accountService.validateAccount(accountNo, pin);
+        // TODO: 26/04/2021 Need to refactor it, access the db after validation
+
+        if (pinLengthValidation && pinNumberValidation) {
+            if (userAccount == null) {
+                System.out.println("Invalid entity.Account Number/PIN");
+            } else {
+                System.out.println("Welcome " + userAccount.getName());
+                launchTransactionScreen(userAccount);
             }
         } else {
-            if (!accLengthValidation) {
-                System.out.println("Account Number should have 6 digits length");
+            if (!pinLengthValidation) {
+                System.out.println("PIN should have 6 digits length");
             } else {
-                System.out.println("Account Number should only contains number");
+                System.out.println("PIN should only contains number");
             }
         }
+    }
+
+    private static boolean isAccLengthValidation(long length, int i) {
+        return length == i;
     }
 
     private static void launchTransactionScreen(Account userAccount){
+
+        // TODO: 26/04/2021 Replace the screen menu logic
         String transactionMenu = "init";
         Integer withdrawSummaryMenu = 0;
         Integer transferSummaryMenu = 0;
@@ -91,28 +89,13 @@ public class Main {
             withdrawInput = showWithdrawMenu();
             switch (withdrawInput){
                 case "1":
-                    if (validateWithdrawTransaction(userAccount, 10l)) {
-                        deductUserBalance(userAccount, 10l);
-                        summaryInput = showSummaryMenu(userAccount, 10l);
-                    } else {
-                        System.out.println("Insufficient balance $10");
-                    }
+                    summaryInput = withdraw(userAccount, summaryInput, 10l);
                     break;
                 case "2":
-                    if (validateWithdrawTransaction(userAccount, 50l)) {
-                        deductUserBalance(userAccount, 50l);
-                        summaryInput = showSummaryMenu(userAccount, 50l);
-                    } else {
-                        System.out.println("Insufficient balance $50");
-                    }
+                    summaryInput = withdraw(userAccount, summaryInput, 50l);
                     break;
                 case "3":
-                    if (validateWithdrawTransaction(userAccount, 100l)) {
-                        deductUserBalance(userAccount, 100l);
-                        summaryInput = showSummaryMenu(userAccount, 100l);
-                    } else {
-                        System.out.println("Insufficient balance $100");
-                    }
+                    summaryInput = withdraw(userAccount, summaryInput, 100l);
                     break;
                 case "4":
                     boolean isNumberValidation = false;
@@ -134,12 +117,7 @@ public class Main {
                             if(isMaxAmountValidation && isTenMultipleValidation){
                                 withdrawValidation = validateWithdrawTransaction(userAccount, customWithdrawAmount);
 
-                                if (validateWithdrawTransaction(userAccount, customWithdrawAmount)) {
-                                    deductUserBalance(userAccount, customWithdrawAmount);
-                                    summaryInput = showSummaryMenu(userAccount, customWithdrawAmount);
-                                } else {
-                                    System.out.println("Insufficient balance $" + customWithdrawAmount);
-                                }
+                                summaryInput = withdraw(userAccount, summaryInput, customWithdrawAmount);
                             } else {
                                 if(!isMaxAmountValidation){
                                     System.out.println("Maximum amount to withdraw is $1000");
@@ -158,6 +136,16 @@ public class Main {
             }
         }
         return summaryInput.isEmpty()? 2 : Integer.parseInt(summaryInput);
+    }
+
+    private static String withdraw(Account userAccount, String summaryInput, long l) {
+        if (!validateWithdrawTransaction(userAccount, l)) {
+            System.out.println("Insufficient balance $" + l);
+            return summaryInput;
+        }
+        deductUserBalance(userAccount, l);
+        summaryInput = showSummaryMenu(userAccount, l);
+        return summaryInput;
     }
 
     private static Integer launchFundTransferScreen(Account userAccount) {
@@ -208,7 +196,7 @@ public class Main {
                     scanner.nextLine(); scanner.reset();
 
                     System.out.println("Transfer Confirmation");
-                    System.out.println("Destination Account : " + destinationAccInput);
+                    System.out.println("Destination entity.Account : " + destinationAccInput);
                     System.out.println("Transfer Amount : " + transferAmountInput.toString());
                     System.out.println("Reference Number : " + refNumber);
 
@@ -220,7 +208,7 @@ public class Main {
                     switch (confirmInput){
                         case "1":
                             deductUserBalance(userAccount, Long.valueOf(transferAmountInput));
-                            addUserBalance(findAccount(destinationAccInput), Long.valueOf(transferAmountInput));
+                            addUserBalance(accountService.findAccount(destinationAccInput), Long.valueOf(transferAmountInput));
 
                             summaryInput = showFundSummaryMenu(userAccount, destinationAccInput, Long.valueOf(transferAmountInput), Integer.toString(refNumber));
                             break;
@@ -241,8 +229,8 @@ public class Main {
 
     private static boolean validateUserAccount(String destinationAccountNo){
         if(destinationAccountNo.isEmpty() || !isNumber(destinationAccountNo) ||
-                findAccount(destinationAccountNo) == null){
-            System.out.println("Invalid Account");
+                accountService.findAccount(destinationAccountNo) == null){
+            System.out.println("Invalid entity.Account");
             return false;
         }
         return true;
@@ -280,7 +268,7 @@ public class Main {
         userAccount.setBalance(newBalance);
     }
 
-    /*Screen Menus*/
+    *//*Screen Menus*//*
     private static String showTransactionMenu() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("1. Withdrawn");
@@ -327,7 +315,7 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("Fund Transfer Summary");
-        System.out.println("Destination Account : " + destinationAccountNo);
+        System.out.println("Destination entity.Account : " + destinationAccountNo);
         System.out.println("Transfer Amount : " + transferAmount.toString());
         System.out.println("Reference Number : " + refrenceNumber);
         System.out.println("Balance : " + userAccount.getBalance());
@@ -338,12 +326,7 @@ public class Main {
         return scanner.nextLine();
     }
 
-    /*Utils Methods*/
-    private static Account findAccount(String accountNumber){
-        return ACCOUNTS.stream()
-                .filter(account -> account.getAccountNumber().equals(accountNumber))
-                .findAny().orElse(null);
-    }
+    *//*Utils Methods*//*
 
     private static boolean isNumber(String input){
         return input.matches("[0-9]+");
@@ -351,12 +334,12 @@ public class Main {
 
     private static Integer generateRefNumber(){
         return 100000 + new Random().nextInt(900000);
-    }
+    }*/
 
     // TODO: Use for debugging only
-    private static void debuggingOnly(){
+//    private static void debuggingOnly(){
 //        System.out.println("*DEBUGGING : User Latest Balance : " + userAccount.getBalance());
-        ACCOUNTS.forEach(account -> System.out.println(account.getName() + " - " + account.getBalance()));
-    }
+//        ACCOUNTS.forEach(account -> System.out.println(account.getName() + " - " + account.getBalance()));
+//    }
 
 }
