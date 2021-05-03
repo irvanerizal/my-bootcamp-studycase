@@ -23,10 +23,10 @@ public class WithdrawScreen {
 
     public Integer lauchWithdrawScreen(Account userAccount){
         String withdrawScreenInput = "";
-        Integer withdrawSummaryResult = Utilities.SUMMARY_RESET_MENU;
+        Integer withdrawSummaryResult = Utilities.SUMMARY_INPUT_TO_RESET;
 
         while (!withdrawScreenInput.equals(BACK_MENU) &&
-                withdrawSummaryResult.equals(Utilities.SUMMARY_RESET_MENU)){
+                withdrawSummaryResult.equals(Utilities.SUMMARY_INPUT_TO_RESET)){
 
             withdrawScreenInput = showWithdrawMenu();
             switch (withdrawScreenInput){

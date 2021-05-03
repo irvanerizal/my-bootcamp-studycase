@@ -9,21 +9,21 @@ public class WithdrawService {
 
     private final AccountService accountService = new AccountService();
 
-    public Integer withdraw(Account userAccount, long amount) {
-        if (!accountService.validateWithdrawTransaction(userAccount, amount)) {
-            System.out.println("Insufficient balance $" + amount);
-            return Utilities.SUMMARY_RESET_MENU;
+    public Integer withdraw(Account userAccount, long withdrawnAmount) {
+        if (!accountService.validateWithdrawTransaction(userAccount, withdrawnAmount)) {
+            System.out.println("Insufficient balance $" + withdrawnAmount +"!\n");
+            return Utilities.SUMMARY_INPUT_TO_RESET;
         }
-        accountService.deductUserBalance(userAccount, amount);
-        return showWithdrawSummaryMenu(userAccount, amount);
+        accountService.deductUserBalance(userAccount, withdrawnAmount);
+        return showWithdrawSummaryMenu(userAccount, withdrawnAmount);
     }
 
-    public Integer showWithdrawSummaryMenu(Account userAccount, Long deduction) {
+    public Integer showWithdrawSummaryMenu(Account userAccount, Long withdrawnAmount) {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("Summary");
-        System.out.println("Date : " + LocalDateTime.now().format(Utilities.FORMATTER));
-        System.out.println("Withdraw : " + deduction);
+        System.out.println("Date : " + LocalDateTime.now().format(Utilities.DATE_FORMATTER));
+        System.out.println("Withdraw : " + withdrawnAmount);
         System.out.println("Balance : " + userAccount.getBalance());
 
         System.out.println("1. Transaction");
@@ -31,7 +31,7 @@ public class WithdrawService {
         System.out.println("Choose option[2]");
         String input = scanner.nextLine();
 
-        return input.isEmpty() ? Utilities.SUMMARY_BACK_TRANSACTION_MENU :
-                !Utilities.isNumber(input) ? Utilities.SUMMARY_BACK_TRANSACTION_MENU : Integer.parseInt(input);
+        return input.isEmpty() ? Utilities.SUMMARY_INPUT_TO_BACK_TRANSACTION_MENU :
+                !Utilities.isNumber(input) ? Utilities.SUMMARY_INPUT_TO_BACK_TRANSACTION_MENU : Integer.parseInt(input);
     }
 }

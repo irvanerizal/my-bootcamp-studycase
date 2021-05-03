@@ -9,25 +9,25 @@ import java.util.Scanner;
 
 public class WithdrawCustomScreen {
 
-    private AccountService accountService = new AccountService();
-    private WithdrawService withdrawService = new WithdrawService();
+    private final AccountService accountService = new AccountService();
+    private final WithdrawService withdrawService = new WithdrawService();
 
     public Integer withdrawCustomAmount(Account userAccount){
 
-        Integer withdrawSummaryResult = Utilities.SUMMARY_RESET_MENU;
+        Integer withdrawSummaryResult = Utilities.SUMMARY_INPUT_TO_RESET;
 
         boolean isNumberValid;
         boolean isMaxValid;
         boolean isMultipleByTenValid;
         boolean withdrawValid;
 
-        while (withdrawSummaryResult.equals(Utilities.SUMMARY_RESET_MENU)){
+        while (withdrawSummaryResult.equals(Utilities.SUMMARY_INPUT_TO_RESET)){
 
             String customWithdraw = showCustomWithdrawMenu();
             isNumberValid = Utilities.isNumber(customWithdraw);
 
             if (!isNumberValid) {
-                System.out.println("Amount input should only contains number");
+                System.out.println("Amount input should only contains number!"+"\n");
                 continue;
             }
             Long customWithdrawAmount = Long.valueOf(customWithdraw);
@@ -35,16 +35,12 @@ public class WithdrawCustomScreen {
             isMultipleByTenValid = (customWithdrawAmount % 10 == 0);
 
             if (!isMaxValid || !isMultipleByTenValid) {
-                if(!isMaxValid){
-                    System.out.println("Maximum amount to withdraw is $1000");
-                } else {
-                    System.out.println("Invalid amount");
-               }
+                System.out.println(!isMaxValid ? "Maximum amount to withdraw is $1000!" + "\n" : "Invalid amount!" + "\n");
                 continue;
             }
             withdrawValid = accountService.validateWithdrawTransaction(userAccount, customWithdrawAmount);
             if (!withdrawValid) {
-                System.out.println("Insufficient balance $" + customWithdrawAmount);
+                System.out.println("Insufficient balance $" + customWithdrawAmount+"!\n");
                 continue;
             }
             withdrawSummaryResult = withdrawService.withdraw(userAccount, customWithdrawAmount);

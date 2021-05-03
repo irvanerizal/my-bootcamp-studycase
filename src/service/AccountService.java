@@ -9,8 +9,8 @@ import java.util.List;
 public class AccountService {
 
     private static final List<Account> ACCOUNTS = Arrays.asList(
-            new Account("112233", "012108", "John Doe", 100l),
-            new Account("112244", "932012", "Jane Doe", 30l)
+            new Account("112233", "012108", "John Doe", 100L),
+            new Account("112244", "932012", "Jane Doe", 30L)
     );
 
     public void deductUserBalance(Account userAccount, Long withdrawAmount){

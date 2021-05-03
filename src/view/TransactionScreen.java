@@ -17,10 +17,10 @@ public class TransactionScreen {
 
     public void launchTransactionScreen(Account userAccount){
         String transactionScreenInput = "";
-        Integer transactionResult = Utilities.SUMMARY_RESET_MENU;
+        Integer transactionResult = Utilities.SUMMARY_INPUT_TO_RESET;
 
         while (!transactionScreenInput.equals(EXIT_MENU) &&
-                !transactionResult.equals(Utilities.SUMMARY_EXIT_MENU)){
+                !transactionResult.equals(Utilities.SUMMARY_INPUT_TO_EXIT_APP)){
 
             transactionScreenInput = showTransactionMenu();
             switch (transactionScreenInput){
@@ -39,7 +39,6 @@ public class TransactionScreen {
     }
 
     private String showTransactionMenu() {
-        /*Show the menu*/
         Scanner scanner = new Scanner(System.in);
         System.out.println("1. Withdraw");
         System.out.println("2. Fund Transfer");

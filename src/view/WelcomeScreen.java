@@ -18,11 +18,8 @@ public class WelcomeScreen {
         System.out.println("Enter Account Number : ");
         String accountNo = scanner.next();
         if (!Utilities.isAccLengthValidation(accountNo.length(), INPUT_LENGTH_VALID) || !Utilities.isNumber(accountNo)) {
-            if (!Utilities.isAccLengthValidation(accountNo.length(), INPUT_LENGTH_VALID)) {
-                System.out.println("Account Number should have 6 digits length");
-            } else {
-                System.out.println("Account Number should only contains number");
-            }
+            System.out.println(!Utilities.isAccLengthValidation(accountNo.length(), INPUT_LENGTH_VALID) ?
+                    "Account Number should have 6 digits length!" + "\n" : "Account Number should only contains number!" + "\n");
             return ;
         }
 
@@ -31,17 +28,14 @@ public class WelcomeScreen {
         boolean pinLengthValidation = Utilities.isAccLengthValidation(pin.length(), INPUT_LENGTH_VALID);
         boolean pinNumberValidation = Utilities.isNumber(pin);
         if (!pinLengthValidation || !pinNumberValidation) {
-            if (!pinLengthValidation) {
-                System.out.println("PIN should have 6 digits length");
-            } else {
-                System.out.println("PIN should only contains number");
-            }
+            System.out.println(!pinLengthValidation ?
+                    "PIN should have 6 digits length!" + "\n" : "PIN should only contains number!" + "\n");
             return;
         }
 
         Account userAccount = accountService.validateAccount(accountNo, pin);
         if (userAccount == null) {
-            System.out.println("Invalid Account Number/PIN");
+            System.out.println("Invalid Account Number/PIN!"+"\n");
             return;
         }
         System.out.println("Welcome " + userAccount.getName());
