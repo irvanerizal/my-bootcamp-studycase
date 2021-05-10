@@ -1,66 +1,77 @@
 package view;
 
 import entity.Account;
-import service.TransferService;
 import service.Utilities;
 
 import java.util.Scanner;
 
+
 public class TransferScreen {
 
-    public final TransferService transferService = new TransferService();
-
-    private static final String RESET_VALUE = "";
+    public final TransferSummaryScreen transferSummaryScreen = new TransferSummaryScreen();
 
     public Integer launchFundTransferScreen(Account userAccount) {
 
-        String destinationInput = RESET_VALUE;
-        String transferAmountInput = RESET_VALUE;
-        String transferConfirmInput;
-        Integer summaryInput = Utilities.SUMMARY_INPUT_TO_RESET;
-        Integer refNumber;
+        Integer summaryInput = Utilities.RESET;
 
-        while (summaryInput.equals(Utilities.SUMMARY_INPUT_TO_RESET)){
+        while (isValidOnTransferScreen(summaryInput)) {
+            try {
+                String destinationInput;
+                String transferAmountInput;
 
-            destinationInput = destinationInput.isEmpty() ? showTransferScreenStage1() :
-                    !transferService.checkUserAccount(destinationInput)? showTransferScreenStage1() : destinationInput;
-
-            if(destinationInput.isEmpty()) return summaryInput;
-            if(transferService.validateUserAccount(destinationInput)) {
-
-                transferAmountInput = transferAmountInput.isEmpty() ? showTransferScreenStage2() :
-                        !transferService.checkTransferAmount(userAccount, transferAmountInput)? showTransferScreenStage2() : transferAmountInput;
-
-                if(transferAmountInput.isEmpty()) return summaryInput;
-                if(transferService.validateTransferAmount(userAccount, transferAmountInput)){
-
-                    refNumber = Utilities.generateRefNumber();
-                    showTransferScreenStage3(refNumber);
-
-                    transferConfirmInput = showTransferScreenStage4(destinationInput, Long.parseLong(transferAmountInput), refNumber);
-                    switch (transferConfirmInput){
-                        case "1":
-                            summaryInput = transferService.transfer(userAccount, destinationInput, transferAmountInput, refNumber);
-                            break;
-                        case "2":
-                        case "":
-                            destinationInput = transferAmountInput = RESET_VALUE;
-                            break;
-                    }
+                destinationInput = showTransferScreenStage1();
+                if (destinationInput.isEmpty()) return summaryInput;
+                if (!transferSummaryScreen.isUserAccountValid(destinationInput)) {
+                    continue;
                 }
+
+                transferAmountInput = showTransferScreenStage2();
+                if (transferAmountInput.isEmpty()) return summaryInput;
+                // guard clause
+                // if (negative condition) then exit
+                // regular execution
+                if (!transferSummaryScreen.isTransferAmountValid(userAccount, transferAmountInput)) {
+                    continue;
+                }
+
+                summaryInput = launchTransferConfirmation(userAccount, destinationInput, transferAmountInput, summaryInput);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
             }
         }
         return summaryInput;
     }
 
-    private String showTransferScreenStage1(){
+    private Integer launchTransferConfirmation(Account userAccount, String destinationInput,
+                                               String transferAmountInput, Integer summaryInput){
+
+        Integer refNumber = Utilities.generateRefNumber();
+        showTransferScreenStage3(refNumber);
+
+        String transferConfirmInput = showTransferScreenStage4(destinationInput, Long.parseLong(transferAmountInput), refNumber);
+        switch (transferConfirmInput) {
+            case "1":
+                summaryInput = transferSummaryScreen.showFundSummaryScreen(userAccount, destinationInput, Long.valueOf(transferAmountInput), refNumber.toString());
+                break;
+            case "2":
+            case "":
+                break;
+        }
+        return summaryInput;
+    }
+
+    private boolean isValidOnTransferScreen(Integer summaryInput) {
+        return summaryInput.equals(Utilities.RESET);
+    }
+
+    private String showTransferScreenStage1() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Please enter destination account and press enter to continue or \n" +
                 "press enter to go back to Transaction:");
         return scanner.nextLine();
     }
 
-    private String showTransferScreenStage2(){
+    private String showTransferScreenStage2() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Please enter transfer amount and \n" +
                 "press enter to continue or \n" +
@@ -68,14 +79,14 @@ public class TransferScreen {
         return scanner.nextLine();
     }
 
-    private String showTransferScreenStage3(Integer refNumber){
+    private String showTransferScreenStage3(Integer refNumber) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Reference Number: " + refNumber + "\n" +
                 "press enter to continue");
         return scanner.nextLine();
     }
 
-    private String showTransferScreenStage4(String destinationAccInput, Long transferAmountInput, Integer refNumber){
+    private String showTransferScreenStage4(String destinationAccInput, Long transferAmountInput, Integer refNumber) {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("Transfer Confirmation");

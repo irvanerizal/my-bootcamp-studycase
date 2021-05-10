@@ -17,29 +17,36 @@ public class WelcomeScreen {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter Account Number : ");
         String accountNo = scanner.next();
-        if (!Utilities.isAccLengthValidation(accountNo.length(), INPUT_LENGTH_VALID) || !Utilities.isNumber(accountNo)) {
+        if (isAccountNumberValid(accountNo)) {
             System.out.println(!Utilities.isAccLengthValidation(accountNo.length(), INPUT_LENGTH_VALID) ?
                     "Account Number should have 6 digits length!" + "\n" : "Account Number should only contains number!" + "\n");
-            return ;
+            return;
         }
 
         System.out.println("Enter PIN : " + scanner.nextLine());
         String pin = scanner.next();
-        boolean pinLengthValidation = Utilities.isAccLengthValidation(pin.length(), INPUT_LENGTH_VALID);
-        boolean pinNumberValidation = Utilities.isNumber(pin);
-        if (!pinLengthValidation || !pinNumberValidation) {
-            System.out.println(!pinLengthValidation ?
+        if (isPinValid(pin)) {
+            System.out.println(!Utilities.isAccLengthValidation(pin.length(), INPUT_LENGTH_VALID) ?
                     "PIN should have 6 digits length!" + "\n" : "PIN should only contains number!" + "\n");
             return;
         }
 
         Account userAccount = accountService.validateAccount(accountNo, pin);
         if (userAccount == null) {
-            System.out.println("Invalid Account Number/PIN!"+"\n");
+            System.out.println("Invalid Account Number/PIN!" + "\n");
             return;
         }
         System.out.println("Welcome " + userAccount.getName());
         transactionScreen.launchTransactionScreen(userAccount);
+    }
+
+    //Create different methods to handle the case if the future PIN/AccountNumber change
+    private boolean isPinValid(String pin) {
+        return !Utilities.isAccLengthValidation(pin.length(), INPUT_LENGTH_VALID) || !Utilities.isNumber(pin);
+    }
+
+    private boolean isAccountNumberValid(String accountNo) {
+        return !Utilities.isAccLengthValidation(accountNo.length(), INPUT_LENGTH_VALID) || !Utilities.isNumber(accountNo);
     }
 
 }

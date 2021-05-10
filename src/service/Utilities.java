@@ -6,9 +6,9 @@ import java.util.Random;
 public class Utilities {
 
     public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-    public static final Integer SUMMARY_INPUT_TO_RESET = 0;
-    public static final Integer SUMMARY_INPUT_TO_BACK_TRANSACTION_MENU = 1;
-    public static final Integer SUMMARY_INPUT_TO_EXIT_APP = 2;
+    public static final Integer RESET = 0;
+    public static final Integer BACK_TRANSACTION_MENU = 1;
+    public static final Integer EXIT_APP = 2;
 
     public static boolean isNumber(String input){
         return input.matches("[0-9]+");

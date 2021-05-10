@@ -15,15 +15,10 @@ public class TransactionScreen {
     private final WithdrawScreen withdrawScreen = new WithdrawScreen();
     private final TransferScreen transferScreen = new TransferScreen();
 
-    public void launchTransactionScreen(Account userAccount){
-        String transactionScreenInput = "";
-        Integer transactionResult = Utilities.SUMMARY_INPUT_TO_RESET;
-
-        while (!transactionScreenInput.equals(EXIT_MENU) &&
-                !transactionResult.equals(Utilities.SUMMARY_INPUT_TO_EXIT_APP)){
-
-            transactionScreenInput = showTransactionMenu();
-            switch (transactionScreenInput){
+    public void launchTransactionScreen(Account userAccount) {
+        Integer transactionResult = Utilities.RESET;
+        while (isValidOnTransactionMenu(transactionResult)) {
+            switch (showTransactionMenu()) {
                 case WITHDRAWN_MENU:
                     transactionResult = withdrawScreen.lauchWithdrawScreen(userAccount);
                     break;
@@ -32,10 +27,14 @@ public class TransactionScreen {
                     break;
                 case EXIT_MENU:
                 case "":
-                    transactionScreenInput = EXIT_MENU;
+                    transactionResult = Utilities.EXIT_APP;
                     break;
             }
         }
+    }
+
+    private boolean isValidOnTransactionMenu(Integer transactionResult) {
+        return !transactionResult.equals(Utilities.EXIT_APP);
     }
 
     private String showTransactionMenu() {
