@@ -1,6 +1,7 @@
 package view;
 
 import entity.Account;
+import service.TransferService;
 import service.Utilities;
 
 import java.util.Scanner;
@@ -8,56 +9,59 @@ import java.util.Scanner;
 
 public class TransferScreen {
 
-    public final TransferSummaryScreen transferSummaryScreen = new TransferSummaryScreen();
+    private final TransferService transferService = new TransferService();
+    private final TransferSummaryScreen transferSummaryScreen = new TransferSummaryScreen();
 
     public Integer launchFundTransferScreen(Account userAccount) {
 
-        Integer summaryInput = Utilities.RESET;
+        Integer transactionResult = Utilities.RESET;
 
-        while (isValidOnTransferScreen(summaryInput)) {
+        while (isValidOnTransferScreen(transactionResult)) {
             try {
                 String destinationInput;
                 String transferAmountInput;
 
                 destinationInput = showTransferScreenStage1();
-                if (destinationInput.isEmpty()) return summaryInput;
-                if (!transferSummaryScreen.isUserAccountValid(destinationInput)) {
+                if (destinationInput.isEmpty()) return transactionResult;
+                if (!transferService.isAccountValid(destinationInput)) {
                     continue;
                 }
 
                 transferAmountInput = showTransferScreenStage2();
-                if (transferAmountInput.isEmpty()) return summaryInput;
+                if (transferAmountInput.isEmpty()) return transactionResult;
                 // guard clause
                 // if (negative condition) then exit
                 // regular execution
-                if (!transferSummaryScreen.isTransferAmountValid(userAccount, transferAmountInput)) {
+                // TODO: Not valid to put check amount here (relate user balance) - based Javier opinion
+               /* if (!transferService.isTransferAmountValid(userAccount, transferAmountInput)) {
                     continue;
-                }
+                }*/
 
-                summaryInput = launchTransferConfirmation(userAccount, destinationInput, transferAmountInput, summaryInput);
+                transactionResult = launchTransferConfirmation(userAccount, destinationInput, transferAmountInput, transactionResult);
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
         }
-        return summaryInput;
+        return transactionResult;
     }
 
     private Integer launchTransferConfirmation(Account userAccount, String destinationInput,
-                                               String transferAmountInput, Integer summaryInput){
+                                               String transferAmountInput, Integer transactionResult){
 
         Integer refNumber = Utilities.generateRefNumber();
         showTransferScreenStage3(refNumber);
 
-        String transferConfirmInput = showTransferScreenStage4(destinationInput, Long.parseLong(transferAmountInput), refNumber);
+        String transferConfirmInput = showTransferScreenStage4(destinationInput, transferAmountInput, refNumber);
         switch (transferConfirmInput) {
             case "1":
-                summaryInput = transferSummaryScreen.showFundSummaryScreen(userAccount, destinationInput, Long.valueOf(transferAmountInput), refNumber.toString());
+                transactionResult = transferSummaryScreen.showFundSummaryScreen(userAccount, destinationInput,
+                        transferAmountInput, refNumber.toString());
                 break;
             case "2":
             case "":
                 break;
         }
-        return summaryInput;
+        return transactionResult;
     }
 
     private boolean isValidOnTransferScreen(Integer summaryInput) {
@@ -86,12 +90,12 @@ public class TransferScreen {
         return scanner.nextLine();
     }
 
-    private String showTransferScreenStage4(String destinationAccInput, Long transferAmountInput, Integer refNumber) {
+    private String showTransferScreenStage4(String destinationAccInput, String transferAmountInput, Integer refNumber) {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("Transfer Confirmation");
         System.out.println("Destination entity.Account : " + destinationAccInput);
-        System.out.println("Transfer Amount : " + transferAmountInput.toString());
+        System.out.println("Transfer Amount : " + transferAmountInput);
         System.out.println("Reference Number : " + refNumber);
 
         System.out.println("1. Confirm Trx");
