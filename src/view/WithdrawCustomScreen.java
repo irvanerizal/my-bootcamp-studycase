@@ -15,17 +15,17 @@ public class WithdrawCustomScreen {
 
     public Integer showWithdrawCustomAmountScreen(Account userAccount) {
 
-        Integer withdrawSummaryResult = Utilities.RESET;
-        while (isValidOnWithdrawCustomScreen(withdrawSummaryResult)) {
+        Integer transactionResult = Utilities.RESET;
+        while (isValidOnWithdrawCustomScreen(transactionResult)) {
             try {
                 Long customWithdrawAmount = validate(userAccount, showCustomWithdrawMenu());
-                withdrawSummaryResult = withdrawSummaryScreen.showWithdrawSummaryScreen(userAccount, customWithdrawAmount);
+                transactionResult = withdrawSummaryScreen.showWithdrawSummaryScreen(userAccount, customWithdrawAmount);
 
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
         }
-        return withdrawSummaryResult;
+        return transactionResult;
     }
 
     private boolean isValidOnWithdrawCustomScreen(Integer withdrawSummaryResult) {

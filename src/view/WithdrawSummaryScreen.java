@@ -1,20 +1,20 @@
 package view;
 
 import entity.Account;
-import service.AccountService;
 import service.Utilities;
+import service.WithdrawService;
 
 import java.time.LocalDateTime;
 import java.util.Scanner;
 
 public class WithdrawSummaryScreen {
 
-    private final AccountService accountService = new AccountService();
+    private final WithdrawService withdrawService = new WithdrawService();
 
     public Integer showWithdrawSummaryScreen(Account userAccount, Long withdrawnAmount)  {
 
         try {
-            withdraw(userAccount, withdrawnAmount);
+            withdrawService.withdraw(userAccount, withdrawnAmount);
 
             Scanner scanner = new Scanner(System.in);
             System.out.println("Summary");
@@ -36,11 +36,5 @@ public class WithdrawSummaryScreen {
         }
     }
 
-    //Will be extracted as withdraw service
-    private void withdraw(Account userAccount, long withdrawnAmount) throws Exception {
-        if (!accountService.validateWithdrawTransaction(userAccount, withdrawnAmount)) {
-            throw new Exception("Insufficient balance $" + withdrawnAmount +"!\n");
-        }
-        accountService.deductUserBalance(userAccount, withdrawnAmount);
-    }
+
 }
