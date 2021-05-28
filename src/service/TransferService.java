@@ -2,9 +2,14 @@ package service;
 
 import entity.Account;
 import entity.Transaction;
+import service.exception.UserNotFoundException;
 
 import java.time.LocalDateTime;
 
+/**
+ * This class has several methods and property relate with the transfer transaction business logic
+ *
+ * */
 public class TransferService {
 
 
@@ -22,16 +27,25 @@ public class TransferService {
         }
     }
 
-    private void doTransfer(Account userAccount, String destinationAccount, String transferAmount, String refrenceNumber){
-        accountService.deductUserBalance(userAccount, Long.valueOf(transferAmount));
-        accountService.addUserBalance(accountService.findAccount(destinationAccount), Long.valueOf(transferAmount));
-        logTransaction(userAccount, destinationAccount, transferAmount, refrenceNumber);
+    private void doTransfer(Account userAccount, String destinationAccount, String transferAmount, String refrenceNumber) throws Exception {
+        // Put in the try catch. create specific exception for rollback implementation
+        try {
+            accountService.deductUserBalance(userAccount, Long.valueOf(transferAmount));
+            accountService.addUserBalance(accountService.findAccount(destinationAccount), Long.valueOf(transferAmount));
+            logTransaction(userAccount, destinationAccount, transferAmount, refrenceNumber);
+        } catch (Exception e){
+            if (e instanceof UserNotFoundException){
+                //Do Rollback - Restore Sender Balance
+                accountService.addUserBalance(userAccount, Long.valueOf(transferAmount));
+            }
+            throw e;
+        }
     }
 
     public boolean isAccountValid(String destinationAccountNo) throws Exception {
         if(!destinationAccountNo.isEmpty() && !Utilities.isNumber(destinationAccountNo) &&
                 null == accountService.findAccount(destinationAccountNo))
-            throw new Exception("Invalid Account!\n");
+            throw new UserNotFoundException("Invalid Account!\n");
         return true;
     }
 
@@ -48,15 +62,22 @@ public class TransferService {
 
     private void logTransaction(Account userAccount, String destinationAccount, String transferAmount, String refrenceNumber){
 
-        Transaction.Transfer transfer = new Transaction.Transfer(userAccount.getAccountNumber(),
-                Transaction.TransactionType.TRANSFER,
+        Transaction.Transfer sender = new Transaction.Transfer(userAccount.getAccountNumber(),
                 LocalDateTime.now(),
                 destinationAccount,
                 userAccount.getAccountNumber(),
                 Long.parseLong(transferAmount),
                 refrenceNumber);
 
-        transactionService.setTransation(transfer);
+        Transaction.Transfer receiver = new Transaction.Transfer(destinationAccount,
+                LocalDateTime.now(),
+                destinationAccount,
+                userAccount.getAccountNumber(),
+                Long.parseLong(transferAmount),
+                refrenceNumber);
+
+        transactionService.saveTransation(sender);
+        transactionService.saveTransation(receiver);
     }
 
 }

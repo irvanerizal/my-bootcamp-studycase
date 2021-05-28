@@ -6,6 +6,10 @@ import service.Utilities;
 
 import java.util.Scanner;
 
+/**
+ * This class has responsibility to show withdraw custom menu screen
+ *
+ * */
 public class WithdrawCustomScreen {
 
     private static final Long MAX_AMOUNT_WITHDRAWN_LIMIT = 1000L;

@@ -5,6 +5,10 @@ import service.Utilities;
 
 import java.util.Scanner;
 
+/**
+ * This class has responsibility to show withdraw menu screen
+ *
+ * */
 public class WithdrawScreen {
 
     /*Withdrawn Screen Constant*/

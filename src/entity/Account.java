@@ -53,12 +53,12 @@ public class Account {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Account account = (Account) o;
-        return Objects.equals(accountNumber, account.accountNumber) && Objects.equals(pin, account.pin) && Objects.equals(name, account.name) && Objects.equals(balance, account.balance);
+        return accountNumber.equals(account.accountNumber);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(accountNumber, pin, name, balance);
+        return Objects.hash(accountNumber);
     }
 
     @Override

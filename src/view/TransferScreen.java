@@ -6,7 +6,10 @@ import service.Utilities;
 
 import java.util.Scanner;
 
-
+/**
+ * This class has responsibility to show transfer menu screen
+ *
+ * */
 public class TransferScreen {
 
     private final TransferService transferService = new TransferService();

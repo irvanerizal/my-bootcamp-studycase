@@ -2,6 +2,8 @@ package entity;
 
 import java.time.LocalDateTime;
 
+import static entity.Transaction.TransactionType.WITHDRAW;
+
 public abstract class Transaction {
 
     private String createdBy;
@@ -60,9 +62,9 @@ public abstract class Transaction {
 
         private String refrenceNumber;
 
-        public Transfer(String createdBy, TransactionType type, LocalDateTime dateTime,
+        public Transfer(String createdBy, LocalDateTime dateTime,
                         String destinationAccountNo, String originAccountNo, Long amount, String refrenceNumber) {
-            super(createdBy, type, dateTime);
+            super(createdBy, Transaction.TransactionType.TRANSFER, dateTime);
             this.destinationAccountNo = destinationAccountNo;
             this.originAccountNo = originAccountNo;
             this.amount = amount;
@@ -116,8 +118,8 @@ public abstract class Transaction {
 
         private Long amount;
 
-        public Withdraw(String createdBy, TransactionType type, LocalDateTime dateTime, Long amount) {
-            super(createdBy, type, dateTime);
+        public Withdraw(String createdBy, LocalDateTime dateTime, Long amount) {
+            super(createdBy, WITHDRAW, dateTime);
             this.amount = amount;
         }
 

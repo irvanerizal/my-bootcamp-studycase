@@ -5,6 +5,10 @@ import service.Utilities;
 
 import java.util.Scanner;
 
+/**
+ * This class has responsibility to show transaction menu screen
+ *
+ * */
 public class TransactionScreen {
 
     /*Transaction Screen Constant*/

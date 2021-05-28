@@ -6,6 +6,10 @@ import service.Utilities;
 
 import java.util.Scanner;
 
+/**
+ * This class has responsibility to show transfer summary menu screen
+ * This will call the transfer action
+ * */
 public class TransferSummaryScreen {
 
     private final TransferService transferService = new TransferService();

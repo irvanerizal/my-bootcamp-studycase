@@ -5,6 +5,10 @@ import entity.Transaction;
 
 import java.time.LocalDateTime;
 
+/**
+ * This class has several methods and property relate with the withdraw transaction business logic
+ *
+ * */
 public class WithdrawService {
 
     private final AccountService accountService = new AccountService();
@@ -22,9 +26,8 @@ public class WithdrawService {
     private void logTransaction(Account userAccount, long withdrawnAmount){
 
         Transaction.Withdraw withdraw = new Transaction.Withdraw(userAccount.getAccountNumber(),
-                Transaction.TransactionType.WITHDRAW,
                 LocalDateTime.now(),
                 withdrawnAmount);
-        transactionService.setTransation(withdraw);
+        transactionService.saveTransation(withdraw);
     }
 }

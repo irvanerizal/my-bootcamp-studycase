@@ -7,6 +7,10 @@ import service.WithdrawService;
 import java.time.LocalDateTime;
 import java.util.Scanner;
 
+/**
+ * This class has responsibility to show withdraw summary menu screen
+ * This will do the withdraw action
+ * */
 public class WithdrawSummaryScreen {
 
     private final WithdrawService withdrawService = new WithdrawService();

@@ -5,34 +5,21 @@ import entity.Transaction;
 import service.TransactionService;
 import service.Utilities;
 
-import java.util.Collections;
 import java.util.List;
 
+/**
+ * This class has the responsibility to show the last transaction histories of the login user
+ *
+ * */
 public class TransactionHistoryScreen {
-
-    private static final Integer QUERY_LIMIT = 10;
 
     private final TransactionService transactionService = new TransactionService();
 
     public void showTransactionHistoriesScreen(Account userAccount) {
         System.out.println("User Latest Balance : " + userAccount.getBalance());
         System.out.println("*** User Transaction Histories ***");
-        List<Transaction> userTransactions = transactionService.getTransactionsByAccountNumber(userAccount.getAccountNumber());
-        if (userTransactions.equals(Collections.emptyList())) {
-            return;
-        }
-
-        if (!isLimitable(userTransactions)) {
-            userTransactions.forEach(transaction -> System.out.println(formattingTransactionHistories(transaction)));
-        } else {
-            userTransactions.stream()
-                    .skip(userTransactions.size() - QUERY_LIMIT)
-                    .forEach(transaction -> System.out.println(formattingTransactionHistories(transaction)));
-        }
-    }
-
-    private boolean isLimitable(List<Transaction> transactions) {
-        return (long) transactions.size() > QUERY_LIMIT;
+        List<Transaction> userTransactions = transactionService.getTransactionByUserAccount(userAccount.getAccountNumber());
+        userTransactions.forEach(transaction -> System.out.println(formattingTransactionHistories(transaction)));
     }
 
     private String formattingTransactionHistories(Transaction transaction){
