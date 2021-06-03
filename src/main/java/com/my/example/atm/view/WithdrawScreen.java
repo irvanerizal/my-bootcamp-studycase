@@ -1,7 +1,7 @@
-package view;
+package com.my.example.atm.view;
 
-import entity.Account;
-import service.Utilities;
+import com.my.example.atm.entity.Account;
+import com.my.example.atm.service.Utilities;
 
 import java.util.Scanner;
 

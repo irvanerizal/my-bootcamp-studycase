@@ -1,4 +1,4 @@
-package service.exception;
+package com.my.example.atm.exception;
 
 public class UserNotFoundException extends Exception{
     public UserNotFoundException(String message) {

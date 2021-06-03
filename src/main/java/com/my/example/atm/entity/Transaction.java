@@ -1,8 +1,8 @@
-package entity;
+package com.my.example.atm.entity;
 
 import java.time.LocalDateTime;
 
-import static entity.Transaction.TransactionType.WITHDRAW;
+import static com.my.example.atm.entity.Transaction.TransactionType.WITHDRAW;
 
 public abstract class Transaction {
 

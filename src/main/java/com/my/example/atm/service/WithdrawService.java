@@ -1,7 +1,7 @@
-package service;
+package com.my.example.atm.service;
 
-import entity.Account;
-import entity.Transaction;
+import com.my.example.atm.entity.Account;
+import com.my.example.atm.entity.Transaction;
 
 import java.time.LocalDateTime;
 

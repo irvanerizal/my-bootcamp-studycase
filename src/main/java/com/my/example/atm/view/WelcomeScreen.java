@@ -1,8 +1,8 @@
-package view;
+package com.my.example.atm.view;
 
-import entity.Account;
-import service.AccountService;
-import service.Utilities;
+import com.my.example.atm.entity.Account;
+import com.my.example.atm.service.AccountService;
+import com.my.example.atm.service.Utilities;
 
 import java.util.Scanner;
 
@@ -23,19 +23,11 @@ public class WelcomeScreen {
             Scanner scanner = new Scanner(System.in);
             System.out.println("Enter Account Number : ");
             String accountNo = scanner.next();
-            if (isAccountNumberValid(accountNo)) {
-                System.out.println(!Utilities.isAccLengthValidation(accountNo.length(), INPUT_LENGTH_VALID) ?
-                        "Account Number should have 6 digits length!" + "\n" : "Account Number should only contains number!" + "\n");
-                return;
-            }
+            validateAccountNumber(accountNo);
 
             System.out.println("Enter PIN : " + scanner.nextLine());
             String pin = scanner.next();
-            if (isPinValid(pin)) {
-                System.out.println(!Utilities.isAccLengthValidation(pin.length(), INPUT_LENGTH_VALID) ?
-                        "PIN should have 6 digits length!" + "\n" : "PIN should only contains number!" + "\n");
-                return;
-            }
+            validatePIN(pin);
 
             Account userAccount = accountService.validateAccount(accountNo, pin);
             System.out.println("Welcome " + userAccount.getName());
@@ -49,12 +41,19 @@ public class WelcomeScreen {
     /**
      * Create different methods to handle PIN and AccNumb if the future PIN/AccountNumber policy change
     * */
-    private boolean isPinValid(String pin) {
-        return !Utilities.isAccLengthValidation(pin.length(), INPUT_LENGTH_VALID) || !Utilities.isNumber(pin);
+    private void validatePIN(String pin) throws Exception {
+        if(!Utilities.isAccLengthValidation(pin.length(), INPUT_LENGTH_VALID) || !Utilities.isNumber(pin)){
+            throw new Exception(!Utilities.isAccLengthValidation(pin.length(), INPUT_LENGTH_VALID) ?
+                    "PIN should have 6 digits length!" + "\n" : "PIN should only contains number!" + "\n");
+        }
     }
 
-    private boolean isAccountNumberValid(String accountNo) {
-        return !Utilities.isAccLengthValidation(accountNo.length(), INPUT_LENGTH_VALID) || !Utilities.isNumber(accountNo);
+    private void validateAccountNumber(String accountNo) throws Exception {
+        if(!Utilities.isAccLengthValidation(accountNo.length(), INPUT_LENGTH_VALID) || !Utilities.isNumber(accountNo)){
+            throw new Exception(!Utilities.isAccLengthValidation(accountNo.length(), INPUT_LENGTH_VALID) ?
+                    "Account Number should have 6 digits length!" + "\n" : "Account Number should only contains number!" + "\n");
+        }
+
     }
 
 }

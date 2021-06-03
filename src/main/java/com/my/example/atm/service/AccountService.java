@@ -1,6 +1,7 @@
-package service;
+package com.my.example.atm.service;
 
-import entity.Account;
+import com.my.example.atm.entity.Account;
+import com.my.example.atm.exception.UserNotFoundException;
 
 import java.util.Arrays;
 import java.util.List;
@@ -46,14 +47,14 @@ public class AccountService {
                 .filter(account -> account.getAccountNumber().equals(accountNo)
                         && account.getPin().equals(pin))
                 .findAny()
-                .orElseThrow(() -> new Exception("Account not found"));
+                .orElseThrow(() -> new UserNotFoundException("Account not found"));
     }
 
     public Account findAccount(String accountNumber) throws Exception{
         return accountData.stream()
                 .filter(account -> account.getAccountNumber().equals(accountNumber))
                 .findAny()
-                .orElseThrow(() -> new Exception("Account not found"));
+                .orElseThrow(() -> new UserNotFoundException("Account not found"));
     }
 
     public boolean validateWithdrawTransaction(Account userAccount, Long withdrawAmount){

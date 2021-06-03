@@ -1,4 +1,4 @@
-package service;
+package com.my.example.atm.service;
 
 import java.time.format.DateTimeFormatter;
 import java.util.Random;

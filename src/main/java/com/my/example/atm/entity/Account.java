@@ -1,4 +1,4 @@
-package entity;
+package com.my.example.atm.entity;
 
 import java.util.Objects;
 

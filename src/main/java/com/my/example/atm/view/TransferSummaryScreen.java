@@ -1,8 +1,8 @@
-package view;
+package com.my.example.atm.view;
 
-import entity.Account;
-import service.TransferService;
-import service.Utilities;
+import com.my.example.atm.entity.Account;
+import com.my.example.atm.service.TransferService;
+import com.my.example.atm.service.Utilities;
 
 import java.util.Scanner;
 
@@ -21,7 +21,7 @@ public class TransferSummaryScreen {
 
             Scanner scanner = new Scanner(System.in);
             System.out.println("Fund Transfer Summary");
-            System.out.println("Destination entity.Account : " + destinationAccountNo);
+            System.out.println("Destination com.my.example.atm.entity.Account : " + destinationAccountNo);
             System.out.println("Transfer Amount : " + transferAmount);
             System.out.println("Reference Number : " + refrenceNumber);
             System.out.println("Balance : " + userAccount.getBalance());

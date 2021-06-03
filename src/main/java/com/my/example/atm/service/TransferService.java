@@ -1,15 +1,14 @@
-package service;
+package com.my.example.atm.service;
 
-import entity.Account;
-import entity.Transaction;
-import service.exception.UserNotFoundException;
+import com.my.example.atm.entity.Account;
+import com.my.example.atm.entity.Transaction;
+import com.my.example.atm.exception.UserNotFoundException;
 
 import java.time.LocalDateTime;
 
 /**
  * This class has several methods and property relate with the transfer transaction business logic
- *
- * */
+ */
 public class TransferService {
 
 
@@ -21,46 +20,40 @@ public class TransferService {
 
 
     public void transfer(Account userAccount, String destinationAccount, String transferAmount, String refrenceNumber) throws Exception {
-        if(isAccountValid(destinationAccount)
-                && isTransferAmountValid(userAccount, transferAmount)){
+        if (isAccountValid(destinationAccount)
+                && isTransferAmountValid(userAccount, transferAmount)) {
             doTransfer(userAccount, destinationAccount, transferAmount, refrenceNumber);
         }
     }
 
     private void doTransfer(Account userAccount, String destinationAccount, String transferAmount, String refrenceNumber) throws Exception {
-        // Put in the try catch. create specific exception for rollback implementation
-        try {
-            accountService.deductUserBalance(userAccount, Long.valueOf(transferAmount));
-            accountService.addUserBalance(accountService.findAccount(destinationAccount), Long.valueOf(transferAmount));
-            logTransaction(userAccount, destinationAccount, transferAmount, refrenceNumber);
-        } catch (Exception e){
-            if (e instanceof UserNotFoundException){
-                //Do Rollback - Restore Sender Balance
-                accountService.addUserBalance(userAccount, Long.valueOf(transferAmount));
-            }
-            throw e;
-        }
+        Account account = accountService.findAccount(destinationAccount);
+
+        accountService.deductUserBalance(userAccount, Long.valueOf(transferAmount));
+        accountService.addUserBalance(account, Long.valueOf(transferAmount));
+        logTransaction(userAccount, destinationAccount, transferAmount, refrenceNumber);
+
     }
 
     public boolean isAccountValid(String destinationAccountNo) throws Exception {
-        if(!destinationAccountNo.isEmpty() && !Utilities.isNumber(destinationAccountNo) &&
+        if (!destinationAccountNo.isEmpty() && !Utilities.isNumber(destinationAccountNo) &&
                 null == accountService.findAccount(destinationAccountNo))
             throw new UserNotFoundException("Invalid Account!\n");
         return true;
     }
 
     public boolean isTransferAmountValid(Account userAccount, String transferAmount) throws Exception {
-        if(!Utilities.isNumber(transferAmount)) throw new Exception("Amount input should only contains number!\n");
-        else if(Long.parseLong(transferAmount) > MAX_AMOUNT_TRANSFER_LIMIT)
+        if (!Utilities.isNumber(transferAmount)) throw new Exception("Amount input should only contains number!\n");
+        else if (Long.parseLong(transferAmount) > MAX_AMOUNT_TRANSFER_LIMIT)
             throw new Exception("Maximum amount to withdraw is $1000!\n");
-        else if(Long.parseLong(transferAmount) < MIN_AMOUNT_TRANSFER_LIMIT)
+        else if (Long.parseLong(transferAmount) < MIN_AMOUNT_TRANSFER_LIMIT)
             throw new Exception("Minimum amount to withdraw is $1!\n");
-        else if(userAccount.getBalance() - Long.parseLong(transferAmount) < 0)
+        else if (userAccount.getBalance() - Long.parseLong(transferAmount) < 0)
             throw new Exception("Insufficient balance $" + transferAmount + "!\n");
         return true;
     }
 
-    private void logTransaction(Account userAccount, String destinationAccount, String transferAmount, String refrenceNumber){
+    private void logTransaction(Account userAccount, String destinationAccount, String transferAmount, String refrenceNumber) {
 
         Transaction.Transfer sender = new Transaction.Transfer(userAccount.getAccountNumber(),
                 LocalDateTime.now(),

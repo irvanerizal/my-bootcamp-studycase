@@ -1,6 +1,6 @@
-package service;
+package com.my.example.atm.service;
 
-import entity.Account;
+import com.my.example.atm.entity.Account;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;

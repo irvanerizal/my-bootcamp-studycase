@@ -1,8 +1,8 @@
-package view;
+package com.my.example.atm.view;
 
-import entity.Account;
-import service.Utilities;
-import service.WithdrawService;
+import com.my.example.atm.entity.Account;
+import com.my.example.atm.service.Utilities;
+import com.my.example.atm.service.WithdrawService;
 
 import java.time.LocalDateTime;
 import java.util.Scanner;

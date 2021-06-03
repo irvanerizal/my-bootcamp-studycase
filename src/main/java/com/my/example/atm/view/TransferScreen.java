@@ -1,8 +1,8 @@
-package view;
+package com.my.example.atm.view;
 
-import entity.Account;
-import service.TransferService;
-import service.Utilities;
+import com.my.example.atm.entity.Account;
+import com.my.example.atm.service.TransferService;
+import com.my.example.atm.service.Utilities;
 
 import java.util.Scanner;
 
@@ -11,6 +11,9 @@ import java.util.Scanner;
  *
  * */
 public class TransferScreen {
+
+    private static final String CONFIRM_MENU = "1";
+    private static final String CANCEL_MENU = "2";
 
     private final TransferService transferService = new TransferService();
     private final TransferSummaryScreen transferSummaryScreen = new TransferSummaryScreen();
@@ -21,16 +24,13 @@ public class TransferScreen {
 
         while (isValidOnTransferScreen(transactionResult)) {
             try {
-                String destinationInput;
-                String transferAmountInput;
-
-                destinationInput = showTransferScreenStage1();
+                String destinationInput = showTransferScreenStage1();
                 if (destinationInput.isEmpty()) return transactionResult;
                 if (!transferService.isAccountValid(destinationInput)) {
                     continue;
                 }
 
-                transferAmountInput = showTransferScreenStage2();
+                String transferAmountInput = showTransferScreenStage2();
                 if (transferAmountInput.isEmpty()) return transactionResult;
                 // guard clause
                 // if (negative condition) then exit
@@ -55,11 +55,11 @@ public class TransferScreen {
 
         String transferConfirmInput = showTransferScreenStage4(destinationInput, transferAmountInput, refNumber);
         switch (transferConfirmInput) {
-            case "1":
+            case CONFIRM_MENU:
                 transactionResult = transferSummaryScreen.showFundSummaryScreen(userAccount, destinationInput,
                         transferAmountInput, refNumber.toString());
                 break;
-            case "2":
+            case CANCEL_MENU:
             case "":
                 break;
         }
@@ -96,7 +96,7 @@ public class TransferScreen {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("Transfer Confirmation");
-        System.out.println("Destination entity.Account : " + destinationAccInput);
+        System.out.println("Destination com.my.example.atm.entity.Account : " + destinationAccInput);
         System.out.println("Transfer Amount : " + transferAmountInput);
         System.out.println("Reference Number : " + refNumber);
 
