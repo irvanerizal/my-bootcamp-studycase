@@ -1,21 +1,36 @@
-package com.my.example.atm.entity;
+package com.my.example.atm.dao.entity;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
-import static com.my.example.atm.entity.Transaction.TransactionType.WITHDRAW;
+import static com.my.example.atm.dao.entity.Transaction.TransactionType.WITHDRAW;
 
+@Entity
+@Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
+//@MappedSuperclass
 public abstract class Transaction {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
     private String createdBy;
-
     private TransactionType type;
-
     private LocalDateTime dateTime;
 
     public Transaction(String createdBy, TransactionType type, LocalDateTime dateTime) {
         this.createdBy = createdBy;
         this.type = type;
         this.dateTime = dateTime;
+    }
+
+    public Transaction() { }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getCreatedBy() {
@@ -51,7 +66,7 @@ public abstract class Transaction {
                 '}';
     }
 
-
+    @Entity
     public static class Transfer extends Transaction{
 
         private String destinationAccountNo;
@@ -61,6 +76,8 @@ public abstract class Transaction {
         private Long amount;
 
         private String refrenceNumber;
+
+        public Transfer(){ }
 
         public Transfer(String createdBy, LocalDateTime dateTime,
                         String destinationAccountNo, String originAccountNo, Long amount, String refrenceNumber) {
@@ -114,9 +131,12 @@ public abstract class Transaction {
         }
     }
 
+    @Entity
     public static class Withdraw extends Transaction{
 
         private Long amount;
+
+        public Withdraw(){ }
 
         public Withdraw(String createdBy, LocalDateTime dateTime, Long amount) {
             super(createdBy, WITHDRAW, dateTime);

@@ -1,6 +1,8 @@
 package com.my.example.atm.service;
 
-import com.my.example.atm.entity.Account;
+import com.my.example.atm.dao.entity.Account;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -12,12 +14,14 @@ import java.util.stream.Collectors;
  * Either it will load from a CSV file or the existing static data
 *
 * */
+@Service
 public class DataLoaderService {
 
     private static final Integer DATA_LIMIT = 20;
     private static final String DELIMITER = ",";
 
-    private final AccountService accountService = new AccountService();
+    @Autowired
+    private AccountService accountService;
 
     public boolean loadAccountData(String path) {
 
@@ -25,7 +29,7 @@ public class DataLoaderService {
         try {
             List<Account> accounts;
             if(path.isEmpty()){
-                accountService.setAccount(new HashSet<>(accountService.getOldAccounts()));
+                accountService.setAccount(new HashSet<>(accountService.getStaticAccounts()));
                 return true;
             }
 

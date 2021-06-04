@@ -1,21 +1,25 @@
 package com.my.example.atm.view;
 
-import com.my.example.atm.entity.Account;
-import com.my.example.atm.service.AccountService;
+import com.my.example.atm.dao.entity.Account;
 import com.my.example.atm.service.Utilities;
+import com.my.example.atm.service.WithdrawService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.Scanner;
 
 /**
  * This class has responsibility to show withdraw custom menu screen
- *
- * */
+ */
+@Component
 public class WithdrawCustomScreen {
 
     private static final Long MAX_AMOUNT_WITHDRAWN_LIMIT = 1000L;
 
-    private final AccountService accountService = new AccountService();
-    private final WithdrawSummaryScreen withdrawSummaryScreen = new WithdrawSummaryScreen();
+    @Autowired
+    private WithdrawService withdrawService;
+    @Autowired
+    private WithdrawSummaryScreen withdrawSummaryScreen;
 
     public Integer showWithdrawCustomAmountScreen(Account userAccount) {
 
@@ -52,7 +56,7 @@ public class WithdrawCustomScreen {
             throw new Exception(!isMaxValid ? "Maximum amount to withdraw is $1000!" + "\n" : "Invalid amount!" + "\n");
         }
 
-        if (!accountService.validateWithdrawTransaction(userAccount, customWithdrawAmount)) {
+        if (!withdrawService.validateWithdrawTransaction(userAccount, customWithdrawAmount)) {
             throw new Exception("Insufficient balance $" + customWithdrawAmount + "!\n");
         }
         return customWithdrawAmount;

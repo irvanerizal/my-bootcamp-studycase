@@ -1,7 +1,9 @@
 package com.my.example.atm.view;
 
-import com.my.example.atm.entity.Account;
+import com.my.example.atm.dao.entity.Account;
 import com.my.example.atm.service.Utilities;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.Scanner;
 
@@ -9,6 +11,7 @@ import java.util.Scanner;
  * This class has responsibility to show withdraw menu screen
  *
  * */
+@Component
 public class WithdrawScreen {
 
     /*Withdrawn Screen Constant*/
@@ -21,8 +24,10 @@ public class WithdrawScreen {
     private static final String WITHDRAWN_CUSTOM_MENU = "4";
     private static final String BACK_MENU = "5";
 
-    private final WithdrawSummaryScreen withdrawSummaryScreen = new WithdrawSummaryScreen();
-    private final WithdrawCustomScreen withdrawCustomService = new WithdrawCustomScreen();
+    @Autowired
+    private WithdrawSummaryScreen withdrawSummaryScreen;
+    @Autowired
+    private WithdrawCustomScreen withdrawCustomService;
 
     public Integer lauchWithdrawScreen(Account userAccount) {
         Integer transactionResult = Utilities.RESET;

@@ -1,7 +1,9 @@
 package com.my.example.atm.view;
 
-import com.my.example.atm.entity.Account;
+import com.my.example.atm.dao.entity.Account;
 import com.my.example.atm.service.Utilities;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.Scanner;
 
@@ -9,6 +11,7 @@ import java.util.Scanner;
  * This class has responsibility to show transaction menu screen
  *
  * */
+@Component
 public class TransactionScreen {
 
     /*Transaction Screen Constant*/
@@ -17,9 +20,13 @@ public class TransactionScreen {
     private static final String SHOW_TRANSACTION_HISTORY_MENU = "3";
     private static final String EXIT_MENU = "4";
 
-    private final WithdrawScreen withdrawScreen = new WithdrawScreen();
-    private final TransferScreen transferScreen = new TransferScreen();
-    private final TransactionHistoryScreen transactionHistoryScreen = new TransactionHistoryScreen();
+    @Autowired
+    private TransactionHistoryScreen transactionHistoryScreen;
+    @Autowired
+    private TransferScreen transferScreen;
+    @Autowired
+    private WithdrawScreen withdrawScreen;
+
 
     public void launchTransactionScreen(Account userAccount) {
         Integer transactionResult = Utilities.RESET;

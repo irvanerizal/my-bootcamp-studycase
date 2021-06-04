@@ -1,9 +1,12 @@
 package com.my.example.atm.view;
 
-import com.my.example.atm.entity.Account;
-import com.my.example.atm.entity.Transaction;
+import com.my.example.atm.dao.entity.Account;
+import com.my.example.atm.dao.entity.Transaction;
+import com.my.example.atm.service.AccountService;
 import com.my.example.atm.service.TransactionService;
 import com.my.example.atm.service.Utilities;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
@@ -11,15 +14,24 @@ import java.util.List;
  * This class has the responsibility to show the last transaction histories of the login user
  *
  * */
+@Component
 public class TransactionHistoryScreen {
 
-    private final TransactionService transactionService = new TransactionService();
+    @Autowired
+    private TransactionService transactionService;
+    @Autowired
+    private AccountService accountService;
 
     public void showTransactionHistoriesScreen(Account userAccount) {
-        System.out.println("User Latest Balance : " + userAccount.getBalance());
-        System.out.println("*** User Transaction Histories ***");
-        List<Transaction> userTransactions = transactionService.getTransactionByUserAccount(userAccount.getAccountNumber());
-        userTransactions.forEach(transaction -> System.out.println(formattingTransactionHistories(transaction)));
+        try {
+            Account latestAccount = accountService.findAccount(userAccount.getAccountNumber());
+            System.out.println("User Latest Balance : " + latestAccount.getBalance());
+            System.out.println("*** User Transaction Histories ***");
+            List<Transaction> userTransactions = transactionService.getTransactionByUserAccount(userAccount.getAccountNumber());
+            userTransactions.forEach(transaction -> System.out.println(formattingTransactionHistories(transaction)));
+        } catch (Exception e){
+            System.out.println(e.getMessage());
+        }
     }
 
     private String formattingTransactionHistories(Transaction transaction){

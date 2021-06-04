@@ -1,8 +1,10 @@
 package com.my.example.atm.view;
 
-import com.my.example.atm.entity.Account;
+import com.my.example.atm.dao.entity.Account;
 import com.my.example.atm.service.TransferService;
 import com.my.example.atm.service.Utilities;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.Scanner;
 
@@ -10,13 +12,16 @@ import java.util.Scanner;
  * This class has responsibility to show transfer menu screen
  *
  * */
+@Component
 public class TransferScreen {
 
     private static final String CONFIRM_MENU = "1";
     private static final String CANCEL_MENU = "2";
 
-    private final TransferService transferService = new TransferService();
-    private final TransferSummaryScreen transferSummaryScreen = new TransferSummaryScreen();
+    @Autowired
+    private TransferService transferService;
+    @Autowired
+    private TransferSummaryScreen transferSummaryScreen;
 
     public Integer launchFundTransferScreen(Account userAccount) {
 
@@ -96,7 +101,7 @@ public class TransferScreen {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("Transfer Confirmation");
-        System.out.println("Destination com.my.example.atm.entity.Account : " + destinationAccInput);
+        System.out.println("Destination com.my.example.atm.dao.entity.Account : " + destinationAccInput);
         System.out.println("Transfer Amount : " + transferAmountInput);
         System.out.println("Reference Number : " + refNumber);
 

@@ -1,23 +1,27 @@
 package com.my.example.atm.service;
 
-import com.my.example.atm.entity.Account;
-import com.my.example.atm.entity.Transaction;
+import com.my.example.atm.dao.entity.Account;
+import com.my.example.atm.dao.entity.Transaction;
 import com.my.example.atm.exception.UserNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
 /**
  * This class has several methods and property relate with the transfer transaction business logic
  */
+@Service
 public class TransferService {
-
 
     private static final Long MAX_AMOUNT_TRANSFER_LIMIT = 1000L;
     private static final Long MIN_AMOUNT_TRANSFER_LIMIT = 1L;
 
-    private final AccountService accountService = new AccountService();
-    private final TransactionService transactionService = new TransactionService();
+    @Autowired
+    private AccountService accountService;
 
+    @Autowired
+    private TransactionService transactionService;
 
     public void transfer(Account userAccount, String destinationAccount, String transferAmount, String refrenceNumber) throws Exception {
         if (isAccountValid(destinationAccount)
@@ -27,10 +31,10 @@ public class TransferService {
     }
 
     private void doTransfer(Account userAccount, String destinationAccount, String transferAmount, String refrenceNumber) throws Exception {
-        Account account = accountService.findAccount(destinationAccount);
+        Account targetAccount = accountService.findAccount(destinationAccount);
 
         accountService.deductUserBalance(userAccount, Long.valueOf(transferAmount));
-        accountService.addUserBalance(account, Long.valueOf(transferAmount));
+        accountService.addUserBalance(targetAccount, Long.valueOf(transferAmount));
         logTransaction(userAccount, destinationAccount, transferAmount, refrenceNumber);
 
     }
