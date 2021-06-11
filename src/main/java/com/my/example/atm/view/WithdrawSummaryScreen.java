@@ -1,9 +1,9 @@
 package com.my.example.atm.view;
 
 import com.my.example.atm.dao.entity.Account;
-import com.my.example.atm.service.AccountService;
+import com.my.example.atm.service.api.AccountService;
 import com.my.example.atm.service.Utilities;
-import com.my.example.atm.service.WithdrawService;
+import com.my.example.atm.service.api.WithdrawService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

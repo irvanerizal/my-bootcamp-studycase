@@ -1,8 +1,9 @@
-package com.my.example.atm.service;
+package com.my.example.atm.service.impl;
 
 import com.my.example.atm.dao.entity.Account;
 import com.my.example.atm.exception.UserNotFoundException;
 import com.my.example.atm.dao.repository.AccountRepository;
+import com.my.example.atm.service.api.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,50 +17,43 @@ import java.util.Set;
  *
  * */
 @Service
-public class AccountService {
+public class AccountServiceImpl implements AccountService {
 
     private static final List<Account> STATIC_ACCOUNTS = Arrays.asList(
             new Account("112233", "012108", "John Doe", 100L),
             new Account("112244", "932012", "Jane Doe", 30L)
     );
-    //Act as stores/database
-//    private static Set<Account> accountData;
 
     @Autowired
     private AccountRepository accountRepository;
 
+    @Override
     public void setAccount(Set<Account> accounts){
-//        accountData = accounts;
         accountRepository.saveAll(accounts);
     }
 
+    @Override
     public List<Account> getStaticAccounts(){
         return STATIC_ACCOUNTS;
     }
 
+    @Override
     public Account validateAccount(String accountNo, String pin) throws Exception {
 
-        return Optional.of(accountRepository.findByAccountNumberAndPin(accountNo, pin))
+        return Optional.ofNullable(accountRepository.findByAccountNumberAndPin(accountNo, pin))
                 .orElseThrow(() -> new UserNotFoundException("Account not found"));
 
-        /*return accountData.stream()
-                .filter(account -> account.getAccountNumber().equals(accountNo)
-                        && account.getPin().equals(pin))
-                .findAny()
-                .orElseThrow(() -> new UserNotFoundException("Account not found"));*/
     }
 
+    @Override
     public Account findAccount(String accountNumber) throws Exception{
 
-        return Optional.of(accountRepository.findByAccountNumber(accountNumber))
+        return Optional.ofNullable(accountRepository.findByAccountNumber(accountNumber))
                 .orElseThrow(() -> new UserNotFoundException("Account not found"));
 
-        /*return accountData.stream()
-                .filter(account -> account.getAccountNumber().equals(accountNumber))
-                .findAny()
-                .orElseThrow(() -> new UserNotFoundException("Account not found"));*/
     }
 
+    @Override
     public void deductUserBalance(Account userAccount, Long withdrawAmount){
 
         Account targetAccount = accountRepository.findByAccountNumber(userAccount.getAccountNumber());
@@ -67,12 +61,9 @@ public class AccountService {
         targetAccount.setBalance(newBalance);
         accountRepository.save(targetAccount);
 
-        /*accountData.remove(userAccount);
-        Long newBalance = userAccount.getBalance() - withdrawAmount;
-        userAccount.setBalance(newBalance);
-        accountData.add(userAccount);*/
     }
 
+    @Override
     public void addUserBalance(Account userAccount, Long transferAmount){
 
         Account targetAccount = accountRepository.findByAccountNumber(userAccount.getAccountNumber());
@@ -80,12 +71,5 @@ public class AccountService {
         userAccount.setBalance(newBalance);
         accountRepository.save(targetAccount);
 
-        /*accountData.remove(userAccount);
-        Long newBalance = userAccount.getBalance() + transferAmount;
-        userAccount.setBalance(newBalance);
-        accountData.add(userAccount);*/
     }
-
-
-
 }

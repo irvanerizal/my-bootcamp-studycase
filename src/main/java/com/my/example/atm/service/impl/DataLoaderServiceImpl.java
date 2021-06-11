@@ -1,13 +1,14 @@
-package com.my.example.atm.service;
+package com.my.example.atm.service.impl;
 
 import com.my.example.atm.dao.entity.Account;
+import com.my.example.atm.exception.DataNotValidException;
+import com.my.example.atm.service.api.AccountService;
+import com.my.example.atm.service.api.DataLoaderService;
+import com.my.example.atm.service.api.FileReaderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
 * This class has responsible to initialize account data.
@@ -15,39 +16,24 @@ import java.util.stream.Collectors;
 *
 * */
 @Service
-public class DataLoaderService {
+public class DataLoaderServiceImpl implements DataLoaderService {
 
     private static final Integer DATA_LIMIT = 20;
-    private static final String DELIMITER = ",";
 
     @Autowired
     private AccountService accountService;
 
-    public boolean loadAccountData(String path) {
+    @Autowired
+    private FileReaderService fileReaderService;
 
-        boolean isLoadDataSuccess = false;
-        try {
-            List<Account> accounts;
+    @Override
+    public void loadAccountData(String path) throws Exception {
             if(path.isEmpty()){
                 accountService.setAccount(new HashSet<>(accountService.getStaticAccounts()));
-                return true;
+                return ;
             }
-
-            accounts = Files.readAllLines(Paths.get(path)).stream()
-                    .map(row -> {
-                        String[] acc = row.split(DELIMITER);
-                        Account account = new Account(acc[3], acc[1], acc[0], Long.parseLong(acc[2]));
-                        return account;
-                    }).collect(Collectors.toList());
-
-            List<Account> validatedAccounts = validateAccountData(accounts);
+            List<Account> validatedAccounts = validateAccountData(fileReaderService.readAccount(path));
             accountService.setAccount(new HashSet<>(validatedAccounts));
-            isLoadDataSuccess = true;
-
-        } catch (Exception e) {
-            System.out.println("Error while initialize data: " + e.getMessage());
-        }
-        return isLoadDataSuccess;
     }
 
     private List<Account> validateAccountData(List<Account> accounts) throws Exception {
@@ -58,11 +44,10 @@ public class DataLoaderService {
                 .findFirst();
 
         if (accounts.size() < DATA_LIMIT) {
-            throw new Exception("CSV file needs to have at least 20 records");
+            throw new DataNotValidException("CSV file needs to have at least 20 records");
         } else if (isDataDuplicate.isPresent()) {
             System.out.println("There can't be duplicated records " + isDataDuplicate.get());
         }
-
         return new ArrayList<>(nonDuplicateAccounts);
     }
 }

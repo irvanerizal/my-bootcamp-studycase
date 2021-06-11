@@ -1,7 +1,11 @@
-package com.my.example.atm.service;
+package com.my.example.atm.service.impl;
 
 import com.my.example.atm.dao.entity.Account;
 import com.my.example.atm.dao.entity.Transaction;
+import com.my.example.atm.exception.InsufficientBalanceException;
+import com.my.example.atm.service.api.AccountService;
+import com.my.example.atm.service.api.TransactionService;
+import com.my.example.atm.service.api.WithdrawService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -12,7 +16,7 @@ import java.time.LocalDateTime;
  *
  * */
 @Component
-public class WithdrawService {
+public class WithdrawServiceImpl implements WithdrawService {
 
     @Autowired
     private AccountService accountService;
@@ -20,13 +24,13 @@ public class WithdrawService {
     @Autowired
     private TransactionService transactionService;
 
+    @Override
     public void withdraw(Account userAccount, long withdrawnAmount) throws Exception {
         if (!validateWithdrawTransaction(userAccount, withdrawnAmount)) {
-            throw new Exception("Insufficient balance $" + withdrawnAmount +"!\n");
+            throw new InsufficientBalanceException("Insufficient balance $" + withdrawnAmount +"!\n");
         }
         accountService.deductUserBalance(userAccount, withdrawnAmount);
         logTransaction(userAccount, withdrawnAmount);
-
     }
 
     private void logTransaction(Account userAccount, long withdrawnAmount){
@@ -37,6 +41,7 @@ public class WithdrawService {
         transactionService.saveTransation(withdraw);
     }
 
+    @Override
     public boolean validateWithdrawTransaction(Account userAccount, Long withdrawAmount){
         return (userAccount.getBalance() >= withdrawAmount
                 && userAccount.getBalance() - withdrawAmount >= 0);
