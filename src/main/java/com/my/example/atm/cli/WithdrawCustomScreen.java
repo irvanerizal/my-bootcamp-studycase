@@ -1,4 +1,4 @@
-package com.my.example.atm.view;
+package com.my.example.atm.cli;
 
 import com.my.example.atm.dao.entity.Account;
 import com.my.example.atm.service.Utilities;
@@ -8,13 +8,13 @@ import org.springframework.stereotype.Component;
 
 import java.util.Scanner;
 
+import static com.my.example.atm.service.Utilities.MAX_AMOUNT_WITHDRAWN_LIMIT;
+
 /**
  * This class has responsibility to show withdraw custom menu screen
  */
 @Component
 public class WithdrawCustomScreen {
-
-    private static final Long MAX_AMOUNT_WITHDRAWN_LIMIT = 1000L;
 
     @Autowired
     private WithdrawService withdrawService;

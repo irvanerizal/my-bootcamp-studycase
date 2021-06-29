@@ -1,4 +1,4 @@
-package com.my.example.atm.view;
+package com.my.example.atm.cli;
 
 import com.my.example.atm.dao.entity.Account;
 import com.my.example.atm.service.api.TransferService;

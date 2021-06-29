@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 
@@ -34,7 +35,7 @@ public class TransactionRepoTest extends TestingProperties {
 
     @Test
     void whenfindByCreatedBy(){
-        List<Transaction> result = transactionRepository.findTransactionByAccountNoDesc(account1.getAccountNumber());
+        List<Transaction> result = transactionRepository.findTransactionByCreatedBy(account1.getAccountNumber(), PageRequest.of(0, 10));
         Assertions.assertEquals(latestTenTransactions.size(), result.size());
     }
 

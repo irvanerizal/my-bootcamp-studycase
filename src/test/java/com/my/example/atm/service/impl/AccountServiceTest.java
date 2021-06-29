@@ -55,6 +55,7 @@ class AccountServiceTest extends TestingProperties {
         Assertions.assertThrows(UserNotFoundException.class, () -> accountService.validateAccount(account1.getAccountNumber(), account1.getPin()));
     }
 
+    // TODO: Unit Test Case Point 3, 5
     @Test
     void whenDeductUserBalanceIsSuccess_ThenBalanceShouldDecreased() {
         when(accountRepository.findByAccountNumber(account1.getAccountNumber()))
@@ -72,6 +73,7 @@ class AccountServiceTest extends TestingProperties {
                 .findByAccountNumber(account1.getAccountNumber());
     }
 
+    // TODO: Unit Test Case Point 5
     @Test
     void whenAddUserBalanceIsSuccess_ThenBalanceShouldIncreased() {
         when(accountRepository.findByAccountNumber(account1.getAccountNumber()))
@@ -88,5 +90,4 @@ class AccountServiceTest extends TestingProperties {
         verify(accountRepository, Mockito.times(1))
                 .findByAccountNumber(account1.getAccountNumber());
     }
-
 }

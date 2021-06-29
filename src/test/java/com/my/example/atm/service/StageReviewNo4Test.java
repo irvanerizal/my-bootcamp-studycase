@@ -1,9 +1,9 @@
-package com.my.example.atm.service.impl;
+package com.my.example.atm.service;
 
-import com.my.example.atm.dao.entity.Transaction;
 import com.my.example.atm.exception.InsufficientBalanceException;
-import com.my.example.atm.service.TestingProperties;
 import com.my.example.atm.service.api.TransactionService;
+import com.my.example.atm.service.impl.AccountServiceImpl;
+import com.my.example.atm.service.impl.WithdrawServiceImpl;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,13 +11,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.mockito.Mockito.*;
-
 @ExtendWith(MockitoExtension.class)
-class WithdrawServiceTest extends TestingProperties {
+class StageReviewNo4Test extends TestingProperties {
 
     @InjectMocks
     WithdrawServiceImpl withdrawService;
@@ -36,23 +33,6 @@ class WithdrawServiceTest extends TestingProperties {
     void tearDown() {
     }
 
-    @Test
-    void whenWithdrawBalanceIsSuccess() throws Exception {
-        doNothing().when(accountService).deductUserBalance(account1, withdrawAmount);
-        doAnswer(invocation -> {
-            Assertions.assertEquals(Transaction.Withdraw.class, invocation.getArgument(0).getClass());
-            return null;
-        }).when(transactionService).saveTransation(Mockito.any());
-
-        withdrawService.withdraw(account1, withdrawAmount);
-
-        verify(accountService, Mockito.times(1))
-                .deductUserBalance(account1, withdrawAmount);
-        verify(transactionService, Mockito.times(1))
-                .saveTransation(Mockito.any());
-    }
-
-    // TODO: Unit Test Case Point 4
     @Test
     void whenWithdraw_andBalanceIsNotEnough_thenReturnExpectedError() {
         Assertions.assertThrows(InsufficientBalanceException.class, () -> {

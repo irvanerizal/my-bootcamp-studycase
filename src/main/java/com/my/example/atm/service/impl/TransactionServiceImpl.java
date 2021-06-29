@@ -4,10 +4,10 @@ import com.my.example.atm.dao.entity.Transaction;
 import com.my.example.atm.dao.repository.TransactionRepository;
 import com.my.example.atm.service.api.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 /**
@@ -29,9 +29,6 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public List<Transaction> getTransactionByUserAccount(String accountNumber) {
-        return transactionRepository.findTransactionByAccountNoDesc(accountNumber)
-                .stream()
-                .limit(QUERY_LIMIT)
-                .collect(Collectors.toList());
+        return transactionRepository.findTransactionByCreatedBy(accountNumber, PageRequest.of(0, QUERY_LIMIT));
     }
 }

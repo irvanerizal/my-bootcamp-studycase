@@ -10,6 +10,10 @@ public class Utilities {
     public static final Integer BACK_TRANSACTION_MENU = 1;
     public static final Integer EXIT_APP = 2;
 
+    public static final Long MAX_AMOUNT_WITHDRAWN_LIMIT = 1000L;
+    public static final int ACCOUNT_AND_PIN_LENGTH_VALIDATION = 6;
+    public static final String ACCOUNT_KEY = "logged_account";
+
     public static boolean isNumber(String input){
         return input.matches("[0-9]+");
     }

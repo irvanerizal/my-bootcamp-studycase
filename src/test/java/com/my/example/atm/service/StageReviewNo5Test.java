@@ -1,11 +1,9 @@
-package com.my.example.atm.service.impl;
+package com.my.example.atm.service;
 
 import com.my.example.atm.dao.entity.Transaction;
-import com.my.example.atm.exception.InsufficientBalanceException;
-import com.my.example.atm.exception.UserNotFoundException;
-import com.my.example.atm.service.TestingProperties;
 import com.my.example.atm.service.api.AccountService;
 import com.my.example.atm.service.api.TransactionService;
+import com.my.example.atm.service.impl.TransferServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,7 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class TransferServiceTest extends TestingProperties {
+class StageReviewNo5Test extends TestingProperties {
 
     @InjectMocks
     private TransferServiceImpl transferService;
@@ -28,7 +26,6 @@ class TransferServiceTest extends TestingProperties {
     @Mock
     private TransactionService transactionService;
 
-    // TODO: Unit Test Case Point 5
     @Test
     void whenTransferIsSuccess() throws Exception {
 
@@ -51,28 +48,6 @@ class TransferServiceTest extends TestingProperties {
                 .addUserBalance(account2, transferAmount);
         verify(transactionService, Mockito.times(2))
                 .saveTransation(Mockito.any());
-    }
-
-    // TODO: Unit Test Case Point 6
-    @Test
-    void whenTransfer_andBalanceSenderIsNotEnough_thenReturnExpectedError() throws Exception {
-
-        Mockito.lenient().when(accountService.findAccount(account2.getAccountNumber()))
-                .thenReturn(account2);
-
-        Assertions.assertThrows(InsufficientBalanceException.class, () -> {
-            transferService.transfer(accountNotEnoughBalance, account2.getAccountNumber(), transferAmount.toString(), refNumber);
-        });
-    }
-
-    // TODO: Unit Test Case Point 7
-    @Test
-    void whenTransfer_andDestinationAccNotFound_thenReturnExpectedError() throws Exception {
-        when(accountService.findAccount(account2.getAccountNumber()))
-                .thenThrow(new UserNotFoundException("Account not found"));
-
-        Assertions.assertThrows(UserNotFoundException.class, () ->
-                transferService.transfer(account1, account2.getAccountNumber(), transferAmount.toString(), refNumber));
     }
 
 }

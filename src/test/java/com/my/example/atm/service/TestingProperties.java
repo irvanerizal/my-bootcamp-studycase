@@ -61,6 +61,7 @@ public class TestingProperties {
     public final Account account2 = accounts.get(1);
     public final Account accountNotEnoughBalance = new Account("112233", "012108", "John Doe", 0L);
 
+    public final Integer querySize = 10;
     public final Long withdrawAmount = 10L;
     public final Long transferAmount = 5L;
     public final Transaction.Withdraw withdraw = new Transaction.Withdraw(account1.getAccountNumber(),

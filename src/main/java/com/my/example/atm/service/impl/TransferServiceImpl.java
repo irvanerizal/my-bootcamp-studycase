@@ -2,6 +2,7 @@ package com.my.example.atm.service.impl;
 
 import com.my.example.atm.dao.entity.Account;
 import com.my.example.atm.dao.entity.Transaction;
+import com.my.example.atm.exception.DataNotValidException;
 import com.my.example.atm.exception.InsufficientBalanceException;
 import com.my.example.atm.exception.UserNotFoundException;
 import com.my.example.atm.service.Utilities;
@@ -50,6 +51,14 @@ public class TransferServiceImpl implements TransferService {
         if (!destinationAccountNo.isEmpty() && !Utilities.isNumber(destinationAccountNo) &&
                 null == accountService.findAccount(destinationAccountNo))
             throw new UserNotFoundException("Invalid Account!\n");
+        return true;
+    }
+
+    @Override
+    public boolean isAmountValid(String transferAmount) throws Exception {
+        if (!Utilities.isNumber(transferAmount)) {
+            throw new DataNotValidException("Amount should be number type!");
+        }
         return true;
     }
 

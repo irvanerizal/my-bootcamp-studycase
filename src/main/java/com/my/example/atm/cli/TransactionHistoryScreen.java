@@ -1,4 +1,4 @@
-package com.my.example.atm.view;
+package com.my.example.atm.cli;
 
 import com.my.example.atm.dao.entity.Account;
 import com.my.example.atm.dao.entity.Transaction;
@@ -45,8 +45,8 @@ public class TransactionHistoryScreen {
             sb.append("Amount : ").append(withdraw.getAmount()).append("\n");
         } else {
             Transaction.Transfer transfer = (Transaction.Transfer) transaction;
-            sb.append("Origin Sender Acc : ").append(transfer.getOriginAccountNo()).append("\n");
-            sb.append("Destination Receiver Acc : ").append(transfer.getDestinationAccountNo()).append("\n");
+            sb.append("Sender Acc : ").append(transfer.getOriginAccountNo()).append("\n");
+            sb.append("Receiver Acc : ").append(transfer.getDestinationAccountNo()).append("\n");
             sb.append("Refrence Number : ").append(transfer.getRefrenceNumber()).append("\n");
             sb.append("Transfer Amount : ").append(transfer.getAmount()).append("\n");
         }
