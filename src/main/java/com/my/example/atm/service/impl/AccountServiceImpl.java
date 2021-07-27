@@ -22,9 +22,8 @@ public class AccountServiceImpl implements AccountService {
 
     private static final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
     private static final List<Account> STATIC_ACCOUNTS = Arrays.asList(
-//            new Account("112233", "012108", "John Doe", 100L),
             new Account("112233", encoder.encode("012108"), "John Doe", 100L),
-            new Account("112244", "932012", "Jane Doe", 30L)
+            new Account("112244", encoder.encode("932012"), "Jane Doe", 30L)
     );
 
     @Autowired

@@ -5,6 +5,7 @@ import com.my.example.atm.service.TestingProperties;
 import com.my.example.atm.service.api.AccountService;
 import com.my.example.atm.service.api.FileReaderService;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -12,7 +13,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.mockito.Mockito.*;
-
+@Disabled
 @ExtendWith(MockitoExtension.class)
 class DataLoaderServiceTest extends TestingProperties {
 
