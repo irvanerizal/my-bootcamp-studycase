@@ -11,6 +11,7 @@ import com.my.example.atm.service.api.TransactionService;
 import com.my.example.atm.service.api.TransferService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
@@ -29,6 +30,7 @@ public class TransferServiceImpl implements TransferService {
     @Autowired
     private TransactionService transactionService;
 
+    @Transactional
     @Override
     public void transfer(Account userAccount, String destinationAccount, String transferAmount, String refrenceNumber) throws Exception {
         if (isAccountValid(destinationAccount)
@@ -42,6 +44,7 @@ public class TransferServiceImpl implements TransferService {
 
         accountService.deductUserBalance(userAccount, Long.valueOf(transferAmount));
         accountService.addUserBalance(targetAccount, Long.valueOf(transferAmount));
+//        throw new RuntimeException("Boom! This happens to simulate transactional rollback"); //to simulate transactional rollback
         logTransaction(userAccount, destinationAccount, transferAmount, refrenceNumber);
 
     }

@@ -32,8 +32,8 @@ class TransferServiceTest extends TestingProperties {
     @Test
     void whenTransferIsSuccess() throws Exception {
 
-        doNothing().when(accountService).deductUserBalance(account1, transferAmount);
-        doNothing().when(accountService).addUserBalance(account2, transferAmount);
+        doNothing().when(accountService).deductUserBalance(account1, transferAmount5);
+        doNothing().when(accountService).addUserBalance(account2, transferAmount5);
 
         doAnswer(invocation -> {
             Assertions.assertEquals(Transaction.Transfer.class, invocation.getArgument(0).getClass());
@@ -43,14 +43,30 @@ class TransferServiceTest extends TestingProperties {
         when(accountService.findAccount(account2.getAccountNumber()))
                 .thenReturn(account2);
 
-        transferService.transfer(account1, account2.getAccountNumber(), transferAmount.toString(), refNumber);
+        transferService.transfer(account1, account2.getAccountNumber(), transferAmount5.toString(), refNumber);
 
         verify(accountService, Mockito.times(1))
-                .deductUserBalance(account1, transferAmount);
+                .deductUserBalance(account1, transferAmount5);
         verify(accountService, Mockito.times(1))
-                .addUserBalance(account2, transferAmount);
+                .addUserBalance(account2, transferAmount5);
         verify(transactionService, Mockito.times(2))
                 .saveTransation(Mockito.any());
+    }
+
+    @Test
+    void whenTransferIsFailed_thenRollback() throws Exception {
+
+        when(accountService.findAccount(account2.getAccountNumber()))
+                .thenReturn(account2);
+
+        doNothing().when(accountService).deductUserBalance(account1, transferAmount5);
+        doThrow(new RuntimeException("BOOM!")).when(accountService).addUserBalance(account2, transferAmount5);
+
+
+        Assertions.assertThrows(RuntimeException.class, () -> {
+            transferService.transfer(account1, account2.getAccountNumber(), transferAmount5.toString(), refNumber);
+
+        });
     }
 
     // TODO: Unit Test Case Point 6
@@ -61,7 +77,7 @@ class TransferServiceTest extends TestingProperties {
                 .thenReturn(account2);
 
         Assertions.assertThrows(InsufficientBalanceException.class, () -> {
-            transferService.transfer(accountNotEnoughBalance, account2.getAccountNumber(), transferAmount.toString(), refNumber);
+            transferService.transfer(accountWithZeroBalance, account2.getAccountNumber(), transferAmount5.toString(), refNumber);
         });
     }
 
@@ -72,7 +88,7 @@ class TransferServiceTest extends TestingProperties {
                 .thenThrow(new UserNotFoundException("Account not found"));
 
         Assertions.assertThrows(UserNotFoundException.class, () ->
-                transferService.transfer(account1, account2.getAccountNumber(), transferAmount.toString(), refNumber));
+                transferService.transfer(account1, account2.getAccountNumber(), transferAmount5.toString(), refNumber));
     }
 
 }

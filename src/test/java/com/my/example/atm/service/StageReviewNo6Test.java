@@ -27,7 +27,7 @@ class StageReviewNo6Test extends TestingProperties {
                 .thenReturn(account2);
 
         Assertions.assertThrows(InsufficientBalanceException.class, () -> {
-            transferService.transfer(accountNotEnoughBalance, account2.getAccountNumber(), transferAmount.toString(), refNumber);
+            transferService.transfer(accountWithZeroBalance, account2.getAccountNumber(), transferAmount5.toString(), refNumber);
         });
     }
 

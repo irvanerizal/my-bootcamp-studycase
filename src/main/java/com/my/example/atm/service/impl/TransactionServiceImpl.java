@@ -4,6 +4,7 @@ import com.my.example.atm.dao.entity.Transaction;
 import com.my.example.atm.dao.repository.TransactionRepository;
 import com.my.example.atm.service.api.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -30,5 +31,10 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public List<Transaction> getTransactionByUserAccount(String accountNumber) {
         return transactionRepository.findTransactionByCreatedBy(accountNumber, PageRequest.of(0, QUERY_LIMIT));
+    }
+
+    @Override
+    public Page<Transaction> getTransactionPageByUserAccount(String accountNumber, PageRequest pageRequest) {
+        return transactionRepository.findByCreatedBy(accountNumber, pageRequest);
     }
 }

@@ -29,8 +29,8 @@ class StageReviewNo5Test extends TestingProperties {
     @Test
     void whenTransferIsSuccess() throws Exception {
 
-        doNothing().when(accountService).deductUserBalance(account1, transferAmount);
-        doNothing().when(accountService).addUserBalance(account2, transferAmount);
+        doNothing().when(accountService).deductUserBalance(account1, transferAmount5);
+        doNothing().when(accountService).addUserBalance(account2, transferAmount5);
 
         doAnswer(invocation -> {
             Assertions.assertEquals(Transaction.Transfer.class, invocation.getArgument(0).getClass());
@@ -40,12 +40,12 @@ class StageReviewNo5Test extends TestingProperties {
         when(accountService.findAccount(account2.getAccountNumber()))
                 .thenReturn(account2);
 
-        transferService.transfer(account1, account2.getAccountNumber(), transferAmount.toString(), refNumber);
+        transferService.transfer(account1, account2.getAccountNumber(), transferAmount5.toString(), refNumber);
 
         verify(accountService, Mockito.times(1))
-                .deductUserBalance(account1, transferAmount);
+                .deductUserBalance(account1, transferAmount5);
         verify(accountService, Mockito.times(1))
-                .addUserBalance(account2, transferAmount);
+                .addUserBalance(account2, transferAmount5);
         verify(transactionService, Mockito.times(2))
                 .saveTransation(Mockito.any());
     }

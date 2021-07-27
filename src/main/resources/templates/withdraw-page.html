@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>ATM</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<style>
+.error {
+	color: red;
+}
+
+</style>
+<body>
+
+<div class="container">
+    <h2>Withdraw Page</h2>
+    <span class="error" id=th:if="${errorMessage}" th:text="${errorMessage}"></span>
+    <label>1. 10</label> <br>
+    <label>2. 50</label> <br>
+    <label>3. 100</label> <br>
+    <label>4. Custom</label> <br>
+    <form class="form-inline" action="#" th:action="@{/app/withdraw}" method="post">
+        <div class="form-group">
+            <label for="withdrawInput">Withdraw Menu:</label>
+            <input type="text" class="form-control" id="withdrawInput" placeholder="Enter withdraw menu" name="withdrawInput">
+        </div>
+        <button type="submit" class="btn btn-default">Submit</button>
+    </form>
+</div>
+
+</body>
+</html>

@@ -33,7 +33,7 @@ class StageReviewNo3Test extends TestingProperties {
             return null;
         }).when(accountRepository).save(Mockito.any());
 
-        accountService.deductUserBalance(account1, withdrawAmount);
+        accountService.deductUserBalance(account1, withdrawAmount10);
 
         verify(accountRepository, Mockito.times(1))
                 .findByAccountNumber(account1.getAccountNumber());

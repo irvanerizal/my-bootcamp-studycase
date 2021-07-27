@@ -1,6 +1,7 @@
 package com.my.example.atm.dao.repository;
 
 import com.my.example.atm.dao.entity.Transaction;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -16,4 +17,5 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
                                                       @Param("limit") Integer limit);*/
 
     List<Transaction> findTransactionByCreatedBy(String accountNumber, Pageable pageable);
+    Page<Transaction> findByCreatedBy(String accountNumber, Pageable pageable);
 }

@@ -11,22 +11,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-/**
- * todo : Please fullfill these expected unit tests
- * The Expected
- * When adding an account, this account is expected to be there when getting user by number account - ???
- * When adding an account, this account is expected to be there when getting list of accounts - ???
- * When creating a withdraw transaction to an account, this account is expected to have its balance reduced by the amount indicated in the withdraw - Done*
- * When creating a withdraw transaction to an account, and the account does not have enough funds, it's expected to receive an error - Done*
- * When creating a transfer transaction from account1 to account2, it's expected to have account1's balance
- * reduced by the amount of the transaction and have account2's balance increased by the amount of the transaction- Done*
- * When creating a transfer transaction from account1 to account2, and account1 does not have enough funds, operation should throw an error- Done*
- * When creating a transfer transaction from account1 to account2, and account2 does not exist, then operation should fail- Done*
- * When creating a succesful transaction, it's expected to have this transaction when getting list of last 10 transactions - Done
- * When creating a bunch of succesful transactions, it's expected to have this list of transactions when getting list of last 10 transactions - Done
- * When creating more than 10 transactions, it's expected to have the 10 most recent transactions when getting list of last 10 transactions - Done
- *
- * */
 public class TestingProperties {
 
     public final List<Account> accounts = Arrays.asList(
@@ -59,51 +43,51 @@ public class TestingProperties {
     public final Set<Account> bulkAccountSet = new HashSet<>(bulkAccounts);
     public final Account account1 = accounts.get(0);
     public final Account account2 = accounts.get(1);
-    public final Account accountNotEnoughBalance = new Account("112233", "012108", "John Doe", 0L);
+    public final Account accountWithZeroBalance = new Account("112233", "012108", "John Doe", 0L);
 
     public final Integer querySize = 10;
-    public final Long withdrawAmount = 10L;
-    public final Long transferAmount = 5L;
+    public final Long withdrawAmount10 = 10L;
+    public final Long transferAmount5 = 5L;
     public final Transaction.Withdraw withdraw = new Transaction.Withdraw(account1.getAccountNumber(),
             LocalDateTime.now(),
-            withdrawAmount);
+            withdrawAmount10);
     public final String refNumber = "XXX";
 
     public final List<Transaction> fiveTransactions = Arrays.asList(
             new Transaction.Transfer(account1.getAccountNumber(), LocalDateTime.now().minusDays(2), account2.getAccountNumber(),
-                    account1.getAccountNumber(), transferAmount, "XXX"),
+                    account1.getAccountNumber(), transferAmount5, "XXX"),
             new Transaction.Transfer(account1.getAccountNumber(), LocalDateTime.now().minusDays(2), account2.getAccountNumber(),
-                    account1.getAccountNumber(), transferAmount, "XXX"),
+                    account1.getAccountNumber(), transferAmount5, "XXX"),
             new Transaction.Transfer(account1.getAccountNumber(), LocalDateTime.now().minusDays(2), account2.getAccountNumber(),
-                    account1.getAccountNumber(), transferAmount, "XXX"),
+                    account1.getAccountNumber(), transferAmount5, "XXX"),
             new Transaction.Transfer(account1.getAccountNumber(), LocalDateTime.now().minusDays(2), account2.getAccountNumber(),
-                    account1.getAccountNumber(), transferAmount, "XXX"),
+                    account1.getAccountNumber(), transferAmount5, "XXX"),
             new Transaction.Transfer(account1.getAccountNumber(), LocalDateTime.now().minusDays(2), account2.getAccountNumber(),
-                    account1.getAccountNumber(), transferAmount, "XXX"));
+                    account1.getAccountNumber(), transferAmount5, "XXX"));
 
     public final List<Transaction> latestTenTransactions = Arrays.asList(
             new Transaction.Transfer(account1.getAccountNumber(), LocalDateTime.now(), account2.getAccountNumber(),
-                    account1.getAccountNumber(), transferAmount, "XXX"),
+                    account1.getAccountNumber(), transferAmount5, "XXX"),
             new Transaction.Transfer(account1.getAccountNumber(), LocalDateTime.now(), account2.getAccountNumber(),
-                    account1.getAccountNumber(), transferAmount, "XXX"),
+                    account1.getAccountNumber(), transferAmount5, "XXX"),
             new Transaction.Transfer(account1.getAccountNumber(), LocalDateTime.now(), account2.getAccountNumber(),
-                    account1.getAccountNumber(), transferAmount, "XXX"),
+                    account1.getAccountNumber(), transferAmount5, "XXX"),
             new Transaction.Transfer(account1.getAccountNumber(), LocalDateTime.now(), account2.getAccountNumber(),
-                    account1.getAccountNumber(), transferAmount, "XXX"),
+                    account1.getAccountNumber(), transferAmount5, "XXX"),
             new Transaction.Transfer(account1.getAccountNumber(), LocalDateTime.now(), account2.getAccountNumber(),
-                    account1.getAccountNumber(), transferAmount, "XXX"),
+                    account1.getAccountNumber(), transferAmount5, "XXX"),
             new Transaction.Withdraw(account1.getAccountNumber(),
                     LocalDateTime.now(),
-                    withdrawAmount),
+                    withdrawAmount10),
             new Transaction.Withdraw(account1.getAccountNumber(),
                     LocalDateTime.now(),
-                    withdrawAmount),
+                    withdrawAmount10),
             new Transaction.Withdraw(account1.getAccountNumber(),
                     LocalDateTime.now(),
-                    withdrawAmount),
+                    withdrawAmount10),
             new Transaction.Withdraw(account1.getAccountNumber(),
                     LocalDateTime.now(),
-                    withdrawAmount),
+                    withdrawAmount10),
             withdraw);
 
     public final List<Transaction> bulkTransactions = Stream.concat(latestTenTransactions.stream(), fiveTransactions.stream())

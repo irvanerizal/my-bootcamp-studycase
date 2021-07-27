@@ -27,7 +27,7 @@ class StageReviewNo7Test extends TestingProperties {
                 .thenThrow(new UserNotFoundException("Account not found"));
 
         Assertions.assertThrows(UserNotFoundException.class, () ->
-                transferService.transfer(account1, account2.getAccountNumber(), transferAmount.toString(), refNumber));
+                transferService.transfer(account1, account2.getAccountNumber(), transferAmount5.toString(), refNumber));
     }
 
 }

@@ -5,7 +5,6 @@ import com.my.example.atm.dao.entity.Transaction;
 import com.my.example.atm.service.api.AccountService;
 import com.my.example.atm.service.api.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -14,7 +13,10 @@ import java.util.List;
 
 import static com.my.example.atm.service.Utilities.ACCOUNT_KEY;
 
-@Controller
+/**
+ * JSP Controller
+ * */
+//@Controller
 public class TransactionHistoryController {
 
     @Autowired

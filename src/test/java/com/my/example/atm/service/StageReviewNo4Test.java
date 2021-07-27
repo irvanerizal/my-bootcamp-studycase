@@ -36,7 +36,7 @@ class StageReviewNo4Test extends TestingProperties {
     @Test
     void whenWithdraw_andBalanceIsNotEnough_thenReturnExpectedError() {
         Assertions.assertThrows(InsufficientBalanceException.class, () -> {
-            withdrawService.withdraw(accountNotEnoughBalance, withdrawAmount);
+            withdrawService.withdraw(accountWithZeroBalance, withdrawAmount10);
         });
     }
 

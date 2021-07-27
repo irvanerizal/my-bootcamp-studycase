@@ -38,16 +38,16 @@ class WithdrawServiceTest extends TestingProperties {
 
     @Test
     void whenWithdrawBalanceIsSuccess() throws Exception {
-        doNothing().when(accountService).deductUserBalance(account1, withdrawAmount);
+        doNothing().when(accountService).deductUserBalance(account1, withdrawAmount10);
         doAnswer(invocation -> {
             Assertions.assertEquals(Transaction.Withdraw.class, invocation.getArgument(0).getClass());
             return null;
         }).when(transactionService).saveTransation(Mockito.any());
 
-        withdrawService.withdraw(account1, withdrawAmount);
+        withdrawService.withdraw(account1, withdrawAmount10);
 
         verify(accountService, Mockito.times(1))
-                .deductUserBalance(account1, withdrawAmount);
+                .deductUserBalance(account1, withdrawAmount10);
         verify(transactionService, Mockito.times(1))
                 .saveTransation(Mockito.any());
     }
@@ -56,7 +56,7 @@ class WithdrawServiceTest extends TestingProperties {
     @Test
     void whenWithdraw_andBalanceIsNotEnough_thenReturnExpectedError() {
         Assertions.assertThrows(InsufficientBalanceException.class, () -> {
-            withdrawService.withdraw(accountNotEnoughBalance, withdrawAmount);
+            withdrawService.withdraw(accountWithZeroBalance, withdrawAmount10);
         });
     }
 

@@ -5,22 +5,19 @@ import com.my.example.atm.service.Utilities;
 import com.my.example.atm.service.api.AccountService;
 import com.my.example.atm.service.api.WithdrawService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 
 import static com.my.example.atm.service.Utilities.ACCOUNT_KEY;
 import static com.my.example.atm.service.Utilities.MAX_AMOUNT_WITHDRAWN_LIMIT;
 
-/**
- * JSP Controller
- * */
-//@Controller
-public class WithdrawController {
+@Controller
+public class NewWithdrawController {
 
     private static final Long AMOUNT_10 = 10L;
     private static final Long AMOUNT_50 = 50L;
@@ -38,63 +35,84 @@ public class WithdrawController {
     @Autowired
     private AccountService accountService;
 
-    @GetMapping("withdraw")
-    public String withdraw(ModelMap model, HttpServletRequest request){
-        return checkSession(request, "withdraw");
+    @GetMapping("app/withdraw")
+    public String withdraw() {
+        return "withdraw-page";
     }
 
-    @PostMapping("withdraw")
-    public String withdraw(ModelMap model, @RequestParam String withdrawinput,
-                           HttpServletRequest request) {
+    @PostMapping("app/withdraw")
+    public String withdraw(ModelMap model,
+                           @RequestParam String withdrawInput,
+                           HttpSession session) {
         try {
-            Account loggedAcc = (Account)request.getSession().getAttribute(ACCOUNT_KEY);
-            switch (withdrawinput) {
+
+            Account loggedAcc = (Account) session.getAttribute(ACCOUNT_KEY);
+            switch (withdrawInput) {
                 case WITHDRAWN_10_MENU:
                     withdrawService.withdraw(loggedAcc, AMOUNT_10);
-                    return loadWithdrawSummary(loggedAcc, model, AMOUNT_10);
+                    return loadWithdrawSummary(loggedAcc, AMOUNT_10);
+
                 case WITHDRAWN_50_MENU:
                     withdrawService.withdraw(loggedAcc, AMOUNT_50);
-                    return loadWithdrawSummary(loggedAcc, model, AMOUNT_50);
+                    return loadWithdrawSummary(loggedAcc, AMOUNT_50);
+
                 case WITHDRAWN_100_MENU:
                     withdrawService.withdraw(loggedAcc, AMOUNT_100);
-                    return loadWithdrawSummary(loggedAcc, model, AMOUNT_100);
+                    return loadWithdrawSummary(loggedAcc, AMOUNT_100);
+
                 case WITHDRAWN_CUSTOM_MENU:
-                    return "withdrawcustom";
+                    return "redirect:/app/withdrawcustom";
+
                 default:
-                    return "transaction";
+                    return "redirect:/app/transaction";
             }
         } catch (Exception e) {
             model.put("errorMessage", e.getMessage());
-            return "withdraw";
+            return "withdraw-page";
         }
     }
 
-    @PostMapping("withdrawcustom")
-    public String withdrawCustom(ModelMap model, @RequestParam String custominput,
-                                 HttpServletRequest request){
-        try{
-            Account loggedAcc = (Account)request.getSession().getAttribute(ACCOUNT_KEY);
-            Long customWithdrawAmount = validate(loggedAcc, custominput);
+    @GetMapping("app/withdrawcustom")
+    public String withdrawCustom() {
+        return "withdraw-custom-page";
+    }
+
+    @PostMapping("app/withdrawcustom")
+    public String withdrawCustom(ModelMap model, @RequestParam String withdrawInput,
+                                 HttpSession session) {
+        try {
+            Account loggedAcc = (Account) session.getAttribute(ACCOUNT_KEY);
+            Long customWithdrawAmount = validate(loggedAcc, withdrawInput);
             withdrawService.withdraw(loggedAcc, customWithdrawAmount);
 
-            return loadWithdrawSummary(loggedAcc, model, customWithdrawAmount);
-        }
-        catch (Exception e){
+            return loadWithdrawSummary(loggedAcc, customWithdrawAmount);
+        } catch (Exception e) {
             model.put("errorMessage", e.getMessage());
-            return "withdrawcustom";
+            return "withdraw-custom-page";
         }
     }
 
-    @PostMapping("withdrawsummary")
-    public String summary(ModelMap model, @RequestParam String summaryinput,
-                          HttpServletRequest request){
-        switch (summaryinput) {
+    @RequestMapping(value = "/app/withdrawsummary", method = RequestMethod.GET)
+    public String withdrawSummary(@RequestParam String amount,
+                                  @RequestParam String balance,
+                                  ModelMap model) {
+        model.put("date", LocalDateTime.now().format(Utilities.DATE_FORMATTER));
+        model.put("amount", amount);
+        model.put("balance", balance);
+        return "withdraw-summary-page";
+    }
+
+    @PostMapping("app/withdrawsummary")
+    public String withdrawSummary(@RequestParam String summaryInput,
+                                  HttpSession session){
+        switch (summaryInput) {
             case EXIT_MENU:
-                request.getSession().invalidate();
-                return "welcome";
+                SecurityContextHolder.getContext().setAuthentication(null);
+                session.invalidate();
+                return "redirect:/welcome";
             case TRANSACTION_MENU:
             default:
-                return "transaction";
+                return "redirect:/app/transaction";
         }
     }
 
@@ -119,16 +137,9 @@ public class WithdrawController {
         return customWithdrawAmount;
     }
 
-    private String loadWithdrawSummary(Account loggedAcc, ModelMap model, Long withdrawinput) throws Exception {
+    private String loadWithdrawSummary(Account loggedAcc, Long withdrawinput) throws Exception {
         Account latestAccount = accountService.findAccount(loggedAcc.getAccountNumber());
-        model.put("date", LocalDateTime.now().format(Utilities.DATE_FORMATTER));
-        model.put("amount", withdrawinput);
-        model.put("balance", latestAccount.getBalance());
-
-        return "withdrawsummary";
+        return "redirect:/app/withdrawsummary?amount=" + withdrawinput + "&balance=" + latestAccount.getBalance();
     }
 
-    private String checkSession(HttpServletRequest request, String pageName){
-        return request.getSession(false) == null ? "welcome" : pageName;
-    }
 }

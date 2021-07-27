@@ -8,6 +8,7 @@ import com.my.example.atm.service.api.TransactionService;
 import com.my.example.atm.service.api.WithdrawService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
@@ -24,12 +25,14 @@ public class WithdrawServiceImpl implements WithdrawService {
     @Autowired
     private TransactionService transactionService;
 
+    @Transactional
     @Override
     public void withdraw(Account userAccount, long withdrawnAmount) throws Exception {
         if (!validateWithdrawTransaction(userAccount, withdrawnAmount)) {
             throw new InsufficientBalanceException("Insufficient balance $" + withdrawnAmount +"!\n");
         }
         accountService.deductUserBalance(userAccount, withdrawnAmount);
+//        throw new RuntimeException("Boom! This happens to simulate transactional rollback"); //to simulate transactional rollback
         logTransaction(userAccount, withdrawnAmount);
     }
 
